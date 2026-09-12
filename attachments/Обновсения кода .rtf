@@ -1,0 +1,1129 @@
+{\rtf1\ansi\ansicpg1251\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh15460\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+<!DOCTYPE html>\
+<html lang="ru">\
+<head>\
+    <!-- \uc0\u1041 \u1080 \u1073 \u1083 \u1080 \u1086 \u1090 \u1077 \u1082 \u1080  \u1076 \u1083 \u1103  \u1075 \u1077 \u1085 \u1077 \u1088 \u1072 \u1094 \u1080 \u1080  PDF -->\
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>\
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>\
+\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>\uc0\u1050 \u1086 \u1085 \u1092 \u1080 \u1075 \u1091 \u1088 \u1072 \u1090 \u1086 \u1088  \u1044 \u1080 \u1082 \u1086 \u1085  - \u1043 \u1072 \u1079 \u1086 \u1074 \u1099 \u1077  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085 \u1099 </title>\
+    <style>\
+        body \{ \
+            font-family: -apple-system, system-ui, sans-serif; \
+            background: #f0f2f5; \
+            padding: 10px; \
+            color: #333; \
+            margin: 0; \
+            -webkit-tap-highlight-color: transparent; \
+        \}\
+        \
+        /* \uc0\u1062 \u1042 \u1045 \u1058 \u1040  \u1041 \u1056 \u1045 \u1053 \u1044 \u1040  */\
+        :root \{\
+            --brand-blue: #29abe2; /* \uc0\u1057 \u1080 \u1085 \u1080 \u1081  \u1082 \u1072 \u1082  \u1085 \u1072  \u1083 \u1086 \u1075 \u1086 \u1090 \u1080 \u1087 \u1077  \u1044 \u1080 \u1082 \u1086 \u1085  */\
+            --brand-dark: #2c3e50;\
+        \}\
+\
+        .card \{ \
+            background: white; \
+            padding: 20px; \
+            border-radius: 12px; \
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08); \
+            max-width: 1100px; \
+            margin: 20px auto; \
+        \}\
+\
+        h2 \{ \
+            color: #000; \
+            text-align: left; \
+            margin: 0 0 10px 0; \
+            font-size: 24px; \
+            font-weight: bold; \
+        \}\
+        \
+        /* \uc0\u1051 \u1080 \u1085 \u1080 \u1103  \u1087 \u1086 \u1076  \u1079 \u1072 \u1075 \u1086 \u1083 \u1086 \u1074 \u1082 \u1086 \u1084  */\
+        .header-line \{ \
+            border-bottom: 3px solid var(--brand-blue); \
+            margin-bottom: 20px; \
+        \}\
+\
+        /* \uc0\u1057 \u1045 \u1058 \u1050 \u1040  \u1050 \u1054 \u1053 \u1060 \u1048 \u1043 \u1059 \u1056 \u1040 \u1058 \u1054 \u1056 \u1040  */\
+        .config-grid \{\
+    display: grid;\
+    grid-template-areas: \
+        "sideA visual sideB"    /* 1-\uc0\u1081  \u1088 \u1103 \u1076 : \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1080  \u1089 \u1083 \u1077 \u1074 \u1072 , \u1095 \u1077 \u1088 \u1090 \u1077 \u1078  \u1087 \u1086  \u1094 \u1077 \u1085 \u1090 \u1088 \u1091 , \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1080  \u1089 \u1087 \u1088 \u1072 \u1074 \u1072  */\
+        ". params ."  /* 2-\uc0\u1081  \u1088 \u1103 \u1076 : \u1087 \u1072 \u1088 \u1072 \u1084 \u1077 \u1090 \u1088 \u1099  \u1085 \u1072  \u1074 \u1089 \u1102  \u1096 \u1080 \u1088 \u1080 \u1085 \u1091  */\
+        ". results ."; /* 3-\uc0\u1081  \u1088 \u1103 \u1076 : \u1088 \u1077 \u1079 \u1091 \u1083 \u1100 \u1090 \u1072 \u1090 \u1099  \u1085 \u1072  \u1074 \u1089 \u1102  \u1096 \u1080 \u1088 \u1080 \u1085 \u1091  */\
+    grid-template-columns: 240px 1fr 240px; \
+    gap: 20px;\
+    align-items: start;\
+\}\
+\
+        .side-a \{ grid-area: sideA; \}\
+        .side-b \{ grid-area: sideB; \}\
+        .center-params \{ grid-area: params; \}\
+        .center-visual \{ grid-area: visual; \}\
+        .center-results \{ grid-area: results; \}\
+\
+        label \{ \
+            display: block; \
+            margin: 12px 0 6px; \
+            font-weight: bold; \
+            font-size: 12px; \
+            color: #555; \
+            text-transform: uppercase; \
+        \}\
+        \
+        select, input \{ \
+            width: 100%; \
+            padding: 12px; \
+            border: 1px solid #d1d8e0; \
+            border-radius: 8px; \
+            box-sizing: border-box; \
+            font-size: 15px; \
+            background: #fff; \
+            margin-bottom: 10px; \
+        \}\
+\
+        .tip-box \{\
+            border: 1px solid #e0e0e0;\
+            padding: 15px;\
+            border-radius: 10px;\
+            text-align: center;\
+            background: #fafafa;\
+            display: flex;\
+            flex-direction: column;\
+            align-items: center;\
+        \}\
+        .tip-box.disabled \{ \
+            opacity: 0.4; \
+            pointer-events: none; \
+        \}\
+        .tip-img \{ \
+            width: 140px; \
+            height: 100px; \
+            object-fit: contain; \
+            margin-bottom: 5px; \
+            background: #fff; \
+            border-radius: 6px; \
+            border: 1px solid #eee; \
+            cursor: pointer; \
+        \}\
+        \
+        .zoom-hint \{ \
+            font-size: 10px; \
+            color: var(--brand-blue); \
+            font-weight: bold; \
+            margin-bottom: 10px; \
+            cursor: pointer; \
+        \}\
+\
+        .params-row \{ \
+            display: grid; \
+            grid-template-columns: 1fr 1fr 1fr 120px; \
+            gap: 15px; \
+            background: #fdfdfd;\
+            padding: 15px;\
+            border-radius: 10px;\
+            border: 1px solid #efefef;\
+        \}\
+\
+        .visual-area \{\
+            text-align: center;\
+            padding: 15px;\
+            background: #fff;\
+            display: flex;\
+            flex-direction: column;\
+            align-items: center;\
+            justify-content: center;\
+            border-radius: 10px;\
+            border: 1px solid #f0f0f0;\
+            position: relative;\
+        \}\
+        \
+        .spring-drawing \{ \
+            max-width: 100%; \
+            height: auto; \
+            max-height: 180px; \
+            cursor: pointer; \
+            transition: transform 0.2s;\
+        \}\
+        .spring-drawing:hover \{\
+            transform: scale(1.02);\
+        \}\
+        .main-zoom-hint \{\
+            font-size: 11px;\
+            color: var(--brand-blue);\
+            font-weight: bold;\
+            margin-bottom: 5px;\
+            cursor: pointer;\
+            display: flex;\
+            align-items: center;\
+            gap: 5px;\
+        \}\
+\
+        .result-panel \{ \
+            display: flex; \
+            flex-direction: column; \
+            gap: 10px; \
+            margin-top: 10px; \
+        \}\
+        \
+        /* \uc0\u1040 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083 : \u1073 \u1077 \u1083 \u1099 \u1081  \u1090 \u1077 \u1082 \u1089 \u1090  \u1085 \u1072  \u1089 \u1080 \u1085 \u1077 \u1084  \u1092 \u1086 \u1085 \u1077  */\
+        .order-code-value \{ \
+            background: var(--brand-blue); \
+            color: #ffffff; \
+            padding: 15px; \
+            border-radius: 8px; \
+            font-family: monospace; \
+            font-size: 16px; \
+            text-align: center; \
+            font-weight: bold; \
+            border: 1px solid #1e8bc2; \
+            word-break: break-all; \
+            box-shadow: 0 4px 10px rgba(41, 171, 226, 0.2);\
+        \}\
+\
+        input.error \{ \
+            border-color: #e74c3c !important; \
+            background: #fff5f5; \
+            color: #e74c3c; \
+        \}\
+        .limit-hint \{ \
+            font-size: 11px; \
+            color: #7f8c8d; \
+            margin-top: -5px; \
+            display: block; \
+            text-align: center; \
+            font-weight: bold; \
+        \}\
+\
+        /* \uc0\u1057 \u1090 \u1080 \u1083 \u1080  \u1087 \u1086 \u1076 \u1074 \u1072 \u1083 \u1072  \u1089  \u1082 \u1085 \u1086 \u1087 \u1082 \u1072 \u1084 \u1080  */\
+        .footer-buttons \{ \
+            display: flex; \
+            justify-content: center;\
+            gap: 15px;\
+            margin-top: 25px; \
+            padding-top: 20px; \
+            border-top: 1px solid #eee; \
+        \}\
+        \
+        .btn \{ \
+            border: none; \
+            padding: 16px 40px; \
+            border-radius: 8px; \
+            font-weight: bold; \
+            cursor: pointer; \
+            font-size: 16px; \
+            text-transform: uppercase;\
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); \
+            transition: background 0.2s;\
+        \}\
+        \
+        .btn-save \{ \
+            background: var(--brand-blue); \
+            color: #fff; \
+        \}\
+        .btn-save:hover \{ \
+            background: #229acb; \
+        \}\
+        .btn-save:disabled \{ \
+            background: #ccc; \
+            opacity: 0.6; \
+            cursor: not-allowed; \
+        \}\
+        \
+        .btn-reset \{\
+            background: #e0e0e0;\
+            color: #333;\
+        \}\
+        .btn-reset:hover \{\
+            background: #d0d0d0;\
+        \}\
+\
+        /* \uc0\u1052 \u1054 \u1044 \u1040 \u1051 \u1050 \u1040  */\
+        .modal \{ \
+            display: none; \
+            position: fixed; \
+            z-index: 1000; \
+            left: 0; \
+            top: 0; \
+            width: 100%; \
+            height: 100%; \
+            background: rgba(0,0,0,0.85); \
+            backdrop-filter: blur(4px); \
+            align-items: center; \
+            justify-content: center; \
+        \}\
+        .modal-content \{ \
+            background: white; \
+            padding: 20px; \
+            border-radius: 15px; \
+            max-width: 95%; \
+            width: 90%; \
+            text-align: center; \
+            position: relative; \
+        \}\
+        .detail-img \{ \
+            max-width: 100%; \
+            max-height: 70vh; \
+            margin-bottom: 15px; \
+            object-fit: contain; \
+        \}\
+        .modal-btns \{ \
+            display: flex; \
+            gap: 10px; \
+            justify-content: center; \
+        \}\
+        .btn-confirm \{ \
+            background: #27ae60; \
+            color: white; \
+            border: none; \
+            padding: 12px 20px; \
+            border-radius: 8px; \
+            font-weight: bold; \
+            cursor: pointer; \
+        \}\
+\
+        @media (max-width: 800px) \{\
+            .config-grid \{\
+                grid-template-columns: 1fr;\
+                grid-template-areas: \
+                    "params"\
+                    "visual"\
+                    "sideA"\
+                    "sideB"\
+                    "results";\
+                gap: 10px;\
+            \}\
+            .params-row \{ \
+                grid-template-columns: 1fr; \
+                padding: 10px; \
+            \}\
+            .tip-box \{ \
+                min-height: auto; \
+                padding: 10px; \
+            \}\
+            .tip-img \{ \
+                width: 120px; \
+                height: 80px; \
+            \}\
+            h2 \{ \
+                font-size: 20px; \
+            \}\
+            \
+            .footer-buttons \{\
+                flex-direction: column;\
+            \}\
+            \
+            .btn \{\
+                width: 100%;\
+            \}\
+        \}\
+        /* \uc0\u1044 \u1074 \u1080 \u1075 \u1072 \u1077 \u1084  \u1090 \u1086 \u1083 \u1100 \u1082 \u1086  \u1090 \u1077 \u1082 \u1089 \u1090  (label) */\
+        .side-a > label \{\
+            margin-top: 1px;     /* \uc0\u1054 \u1090 \u1089 \u1090 \u1091 \u1087  \u1089 \u1074 \u1077 \u1088 \u1093 \u1091  \u1076 \u1083 \u1103  \u1090 \u1077 \u1082 \u1089 \u1090 \u1072  */\
+            margin-bottom: -100px;   /* \uc0\u1056 \u1072 \u1089 \u1089 \u1090 \u1086 \u1103 \u1085 \u1080 \u1077  \u1086 \u1090  \u1090 \u1077 \u1082 \u1089 \u1090 \u1072  \u1076 \u1086  \u1073 \u1083 \u1086 \u1082 \u1072  */\
+            position: relative;\
+            /* top: 0; */         /* \uc0\u1052 \u1086 \u1078 \u1085 \u1086  \u1080 \u1089 \u1087 \u1086 \u1083 \u1100 \u1079 \u1086 \u1074 \u1072 \u1090 \u1100  \u1076 \u1083 \u1103  \u1090 \u1086 \u1095 \u1085 \u1086 \u1081  \u1085 \u1072 \u1089 \u1090 \u1088 \u1086 \u1081 \u1082 \u1080  */\
+        \}\
+\
+        .side-b > label \{\
+            margin-top: 1px;     /* \uc0\u1054 \u1090 \u1089 \u1090 \u1091 \u1087  \u1089 \u1074 \u1077 \u1088 \u1093 \u1091  \u1076 \u1083 \u1103  \u1090 \u1077 \u1082 \u1089 \u1090 \u1072  */\
+            margin-bottom: -1px;   /* \uc0\u1056 \u1072 \u1089 \u1089 \u1090 \u1086 \u1103 \u1085 \u1080 \u1077  \u1086 \u1090  \u1090 \u1077 \u1082 \u1089 \u1090 \u1072  \u1076 \u1086  \u1073 \u1083 \u1086 \u1082 \u1072  */\
+            position: relative;\
+        \}\
+\
+        /* \uc0\u1044 \u1074 \u1080 \u1075 \u1072 \u1077 \u1084  \u1090 \u1086 \u1083 \u1100 \u1082 \u1086  \u1073 \u1083 \u1086 \u1082  (tip-box) - \u1085 \u1077 \u1079 \u1072 \u1074 \u1080 \u1089 \u1080 \u1084 \u1086  \u1086 \u1090  \u1090 \u1077 \u1082 \u1089 \u1090 \u1072  */\
+        .side-a .tip-box \{\
+            margin-top: 0;        /* \uc0\u1059 \u1073 \u1080 \u1088 \u1072 \u1077 \u1084  \u1086 \u1090 \u1089 \u1090 \u1091 \u1087  \u1089 \u1074 \u1077 \u1088 \u1093 \u1091  \u1091  \u1073 \u1083 \u1086 \u1082 \u1072  */\
+            margin-bottom: 0;\
+            position: relative;\
+            top: 119px;            /* \uc0\u1057 \u1076 \u1074 \u1080 \u1075 \u1072 \u1077 \u1084  \u1073 \u1083 \u1086 \u1082  \u1086 \u1090 \u1085 \u1086 \u1089 \u1080 \u1090 \u1077 \u1083 \u1100 \u1085 \u1086  \u1077 \u1075 \u1086  \u1085 \u1086 \u1088 \u1084 \u1072 \u1083 \u1100 \u1085 \u1086 \u1081  \u1087 \u1086 \u1079 \u1080 \u1094 \u1080 \u1080  */\
+            /* top: 20px;  - \uc0\u1086 \u1087 \u1091 \u1089 \u1090 \u1080 \u1090 \u1100  \u1073 \u1083 \u1086 \u1082  */\
+            /* top: -10px; - \uc0\u1087 \u1086 \u1076 \u1085 \u1103 \u1090 \u1100  \u1073 \u1083 \u1086 \u1082  */\
+        \}\
+\
+        .side-b .tip-box \{\
+            margin-top: 0;\
+            margin-bottom: 0;\
+            position: relative;\
+            top: 20px;            /* \uc0\u1057 \u1076 \u1074 \u1080 \u1075 \u1072 \u1077 \u1084  \u1073 \u1083 \u1086 \u1082  \u1086 \u1090 \u1085 \u1086 \u1089 \u1080 \u1090 \u1077 \u1083 \u1100 \u1085 \u1086  \u1077 \u1075 \u1086  \u1085 \u1086 \u1088 \u1084 \u1072 \u1083 \u1100 \u1085 \u1086 \u1081  \u1087 \u1086 \u1079 \u1080 \u1094 \u1080 \u1080  */\
+        \}\
+\
+        /* \uc0\u1044 \u1083 \u1103  \u1084 \u1086 \u1073 \u1080 \u1083 \u1100 \u1085 \u1099 \u1093  - \u1074 \u1089 \u1105  \u1087 \u1086  \u1091 \u1084 \u1086 \u1083 \u1095 \u1072 \u1085 \u1080 \u1102  */\
+        @media (max-width: 800px) \{\
+            .side-a > label,\
+            .side-b > label \{\
+                margin-top: 0;\
+                margin-bottom: 5px;\
+            \}\
+            \
+            .side-a .tip-box,\
+            .side-b .tip-box \{\
+                top: 0;\
+            \}\
+        \}\
+        /* \uc0\u1054 \u1087 \u1091 \u1089 \u1082 \u1072 \u1077 \u1084  \u1095 \u1077 \u1088 \u1090 \u1077 \u1078  */\
+.center-visual \{\
+    margin-top: 35px; /* \uc0\u1088 \u1077 \u1075 \u1091 \u1083 \u1080 \u1088 \u1091 \u1081 \u1090 \u1077  \u1101 \u1090 \u1086  \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  */\
+\}\
+\
+/* \uc0\u1054 \u1087 \u1091 \u1089 \u1082 \u1072 \u1077 \u1084  \u1073 \u1083 \u1086 \u1082  \u1089  \u1087 \u1072 \u1088 \u1072 \u1084 \u1077 \u1090 \u1088 \u1072 \u1084 \u1080  */\
+.center-params \{\
+    margin-top: 15px; /* \uc0\u1088 \u1077 \u1075 \u1091 \u1083 \u1080 \u1088 \u1091 \u1081 \u1090 \u1077  \u1101 \u1090 \u1086  \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  */\
+\}\
+    </style>\
+</head>\
+<body>\
+<!-- \uc0\u1057 \u1050 \u1056 \u1067 \u1058 \u1067 \u1049  \u1064 \u1040 \u1041 \u1051 \u1054 \u1053  \u1044 \u1051 \u1071  PDF -->\
+<div id="pdf-template" style="position: absolute; left: -9999px; top: 0; width: 790px; background: white; padding: 40px; font-family: sans-serif; color: #333;">\
+    <!-- \uc0\u1047 \u1072 \u1075 \u1086 \u1083 \u1086 \u1074 \u1086 \u1082  -->\
+    <div style="border-bottom: 3px solid #29abe2; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">\
+        <div>\
+            <h1 style="margin: 0; font-size: 24px; color: #2c3e50;">\uc0\u1058 \u1077 \u1093 \u1085 \u1080 \u1095 \u1077 \u1089 \u1082 \u1072 \u1103  \u1089 \u1087 \u1077 \u1094 \u1080 \u1092 \u1080 \u1082 \u1072 \u1094 \u1080 \u1103 </h1>\
+            <p style="margin: 5px 0 0; color: #7f8c8d; font-size: 14px;">\uc0\u1050 \u1086 \u1085 \u1092 \u1080 \u1075 \u1091 \u1088 \u1072 \u1090 \u1086 \u1088  \u1075 \u1072 \u1079 \u1086 \u1074 \u1099 \u1093  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085  \u1044 \u1080 \u1082 \u1086 \u1085 </p>\
+        </div>\
+        <div style="text-align: right;">\
+            <div style="font-size: 12px; color: #999;">\uc0\u1044 \u1072 \u1090 \u1072 : <span id="pdf-date"></span></div>\
+        </div>\
+    </div>\
+\
+    <!-- \uc0\u1054 \u1089 \u1085 \u1086 \u1074 \u1085 \u1086 \u1081  \u1040 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  -->\
+    <div style="background: #f0f7fa; border: 1px solid #29abe2; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;">\
+        <div style="font-size: 14px; color: #555; margin-bottom: 5px;">\uc0\u1040 \u1056 \u1058 \u1048 \u1050 \u1059 \u1051  \u1044 \u1051 \u1071  \u1047 \u1040 \u1050 \u1040 \u1047 \u1040 :</div>\
+        <div id="pdf-article" style="font-size: 28px; font-weight: bold; color: #29abe2; font-family: monospace;">---</div>\
+    </div>\
+\
+    <!-- \uc0\u1058 \u1072 \u1073 \u1083 \u1080 \u1094 \u1072  \u1093 \u1072 \u1088 \u1072 \u1082 \u1090 \u1077 \u1088 \u1080 \u1089 \u1090 \u1080 \u1082  -->\
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">\
+        <tr style="background: #eee;">\
+            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">\uc0\u1055 \u1072 \u1088 \u1072 \u1084 \u1077 \u1090 \u1088 </th>\
+            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">\uc0\u1047 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077 </th>\
+        </tr>\
+        <tr>\
+            <td style="padding: 10px; border: 1px solid #ddd;">\uc0\u1057 \u1077 \u1088 \u1080 \u1103 </td>\
+            <td style="padding: 10px; border: 1px solid #ddd;" id="pdf-series"></td>\
+        </tr>\
+        <tr>\
+            <td style="padding: 10px; border: 1px solid #ddd;">\uc0\u1056 \u1072 \u1079 \u1084 \u1077 \u1088 \u1099  (L / \u1061 \u1086 \u1076 )</td>\
+            <td style="padding: 10px; border: 1px solid #ddd;" id="pdf-dims"></td>\
+        </tr>\
+        <tr>\
+            <td style="padding: 10px; border: 1px solid #ddd;">\uc0\u1059 \u1089 \u1080 \u1083 \u1080 \u1077  (F1)</td>\
+            <td style="padding: 10px; border: 1px solid #ddd;" id="pdf-force"></td>\
+        </tr>\
+        <tr>\
+            <td style="padding: 10px; border: 1px solid #ddd;">\uc0\u1052 \u1077 \u1078 \u1094 \u1077 \u1085 \u1090 \u1088 \u1086 \u1074 \u1086 \u1077  \u1088 \u1072 \u1089 \u1089 \u1090 \u1086 \u1103 \u1085 \u1080 \u1077  (L1)</td>\
+            <td style="padding: 10px; border: 1px solid #ddd;" id="pdf-l1"></td>\
+        </tr>\
+        <tr>\
+            <td style="padding: 10px; border: 1px solid #ddd;">\uc0\u1058 \u1080 \u1087  \u1089 \u1086 \u1077 \u1076 \u1080 \u1085 \u1077 \u1085 \u1080 \u1103 </td>\
+            <td style="padding: 10px; border: 1px solid #ddd;" id="pdf-conn"></td>\
+        </tr>\
+    </table>\
+\
+    <!-- \uc0\u1063 \u1077 \u1088 \u1090 \u1077 \u1078 \u1080  -->\
+    <div style="margin-bottom: 30px;">\
+        <h3 style="border-bottom: 1px solid #eee; padding-bottom: 5px;">\uc0\u1057 \u1093 \u1077 \u1084 \u1072  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085 \u1099 </h3>\
+        <div style="text-align: center; padding: 20px; border: 1px solid #eee; border-radius: 8px;">\
+            <img id="pdf-main-img" src="" style="max-width: 100%; max-height: 200px;">\
+        </div>\
+    </div>\
+\
+    <!-- \uc0\u1044 \u1045 \u1058 \u1040 \u1051 \u1048 \u1047 \u1040 \u1062 \u1048 \u1071  \u1053 \u1040 \u1050 \u1054 \u1053 \u1045 \u1063 \u1053 \u1048 \u1050 \u1054 \u1042  (\u1055 \u1054 \u1052 \u1045 \u1053 \u1071 \u1051 \u1048  \u1052 \u1045 \u1057 \u1058 \u1040 \u1052 \u1048 ) -->\
+    <div style="display: flex; gap: 20px;">\
+        \
+        <!-- \uc0\u1051 \u1045 \u1042 \u1040 \u1071  \u1050 \u1054 \u1051 \u1054 \u1053 \u1050 \u1040 : \u1058 \u1045 \u1055 \u1045 \u1056 \u1068  \u1069 \u1058 \u1054  \u1064 \u1058 \u1054 \u1050  (\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B) -->\
+        <div style="width: 50%;">\
+            <h4 style="margin-top: 0; font-size: 14px; color: #555;">\uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B (\u1064 \u1090 \u1086 \u1082 )</h4>\
+            <div style="border: 1px solid #eee; padding: 10px; text-align: center; border-radius: 8px;">\
+                <!-- ID \uc0\u1080 \u1079 \u1084 \u1077 \u1085 \u1077 \u1085 \u1099  \u1085 \u1072  rod -->\
+                <img id="pdf-img-rod" src="" style="max-height: 100px; object-fit: contain;">\
+                <p id="pdf-name-rod" style="font-size: 12px; margin: 5px 0 0;"></p>\
+            </div>\
+        </div>\
+\
+        <!-- \uc0\u1055 \u1056 \u1040 \u1042 \u1040 \u1071  \u1050 \u1054 \u1051 \u1054 \u1053 \u1050 \u1040 : \u1058 \u1045 \u1055 \u1045 \u1056 \u1068  \u1069 \u1058 \u1054  \u1058 \u1056 \u1059 \u1041 \u1050 \u1040  (\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  \u1040 ) -->\
+        <div style="width: 50%;">\
+            <h4 style="margin-top: 0; font-size: 14px; color: #555;">\uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  \u1040  (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 )</h4>\
+            <div style="border: 1px solid #eee; padding: 10px; text-align: center; border-radius: 8px;">\
+                <!-- ID \uc0\u1080 \u1079 \u1084 \u1077 \u1085 \u1077 \u1085 \u1099  \u1085 \u1072  tube -->\
+                <img id="pdf-img-tube" src="" style="max-height: 100px; object-fit: contain;">\
+                <p id="pdf-name-tube" style="font-size: 12px; margin: 5px 0 0;"></p>\
+            </div>\
+        </div>\
+\
+    </div>\
+    \
+    <div style="margin-top: 40px; font-size: 10px; color: #999; text-align: center; border-top: 1px solid #eee; padding-top: 10px;">\
+        \uc0\u1057 \u1092 \u1086 \u1088 \u1084 \u1080 \u1088 \u1086 \u1074 \u1072 \u1085 \u1086  \u1072 \u1074 \u1090 \u1086 \u1084 \u1072 \u1090 \u1080 \u1095 \u1077 \u1089 \u1082 \u1080  \u1085 \u1072  \u1089 \u1072 \u1081 \u1090 \u1077  dikon.ru\
+    </div>\
+</div>\
+\
+\
+<div class="card">\
+    <h2>\uc0\u1050 \u1086 \u1085 \u1092 \u1080 \u1075 \u1091 \u1088 \u1072 \u1090 \u1086 \u1088  \u1075 \u1072 \u1079 \u1086 \u1074 \u1099 \u1093  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085  \u1044 \u1080 \u1082 \u1086 \u1085 </h2>\
+    <div class="header-line"></div>\
+    \
+    <div class="config-grid">\
+        \
+        <!-- \uc0\u1055 \u1040 \u1056 \u1040 \u1052 \u1045 \u1058 \u1056 \u1067  -->\
+        <div class="center-params">\
+            <div class="params-row">\
+                <div>\
+                    <label>1. \uc0\u1057 \u1077 \u1088 \u1080 \u1103 :</label>\
+                    <select id="series" onchange="updateUI()">\
+                        <option value="16-1">16-1 (\'d8 \uc0\u1085 \u1072 \u1087 \u1086 \u1088 \u1085 \u1086 \u1081  \u1090 \u1088 \u1091 \u1073 \u1082 \u1080  15 \u1084 \u1084 , \'d8 \u1096 \u1090 \u1086 \u1082 \u1072  6 \u1084 \u1084 , \u1084 \u1072 \u1082 \u1089 . \u1093 \u1086 \u1076  \u1096 \u1090 \u1086 \u1082 \u1072  150 \u1084 \u1084 , \u1091 \u1089 \u1080 \u1083 \u1080 \u1077  \u1086 \u1090  50 \u1076 \u1086  400N)</option>\
+                        <option value="16-2">16-2 (\'d8 \uc0\u1085 \u1072 \u1087 \u1086 \u1088 \u1085 \u1086 \u1081  \u1090 \u1088 \u1091 \u1073 \u1082 \u1080  18.5 \u1084 \u1084 , \'d8 \u1096 \u1090 \u1086 \u1082 \u1072  8 \u1084 \u1084 , \u1084 \u1072 \u1082 \u1089 . \u1093 \u1086 \u1076  \u1096 \u1090 \u1086 \u1082 \u1072  250 \u1084 \u1084 , \u1091 \u1089 \u1080 \u1083 \u1080 \u1077  \u1086 \u1090  80 \u1076 \u1086  750N)</option>\
+                        <option value="16-4">16-4 (\'d8 \uc0\u1085 \u1072 \u1087 \u1086 \u1088 \u1085 \u1086 \u1081  \u1090 \u1088 \u1091 \u1073 \u1082 \u1080  22 \u1084 \u1084 , \'d8 \u1096 \u1090 \u1086 \u1082 \u1072  10 \u1084 \u1084 , \u1084 \u1072 \u1082 \u1089 . \u1093 \u1086 \u1076  \u1096 \u1090 \u1086 \u1082 \u1072  495 \u1084 \u1084 , \u1091 \u1089 \u1080 \u1083 \u1080 \u1077  \u1086 \u1090  100 \u1076 \u1086  1200N)</option>\
+                        <option value="16-6">16-6 (\'d8 \uc0\u1085 \u1072 \u1087 \u1086 \u1088 \u1085 \u1086 \u1081  \u1090 \u1088 \u1091 \u1073 \u1082 \u1080  28 \u1084 \u1084 , \'d8 \u1096 \u1090 \u1086 \u1082 \u1072  14 \u1084 \u1084 , \u1084 \u1072 \u1082 \u1089 . \u1093 \u1086 \u1076  \u1096 \u1090 \u1086 \u1082 \u1072  500 \u1084 \u1084 , \u1091 \u1089 \u1080 \u1083 \u1080 \u1077  \u1086 \u1090  200 \u1076 \u1086  2000N)</option>\
+                    </select>\
+                </div>\
+                <div>\
+                    <label>2. \uc0\u1044 \u1083 \u1080 \u1085 \u1072  \u1080  \u1061 \u1086 \u1076 :</label>\
+                    <select id="dimensions-select" onchange="calculateTotal()"></select>\
+                </div>\
+                <div>\
+                    <label>3. \uc0\u1057 \u1086 \u1077 \u1076 \u1080 \u1085 \u1077 \u1085 \u1080 \u1077 :</label>\
+                    <select id="connection" onchange="updateUI()">\
+                        <option value="threaded">\uc0\u1056 \u1077 \u1079 \u1100 \u1073 \u1086 \u1074 \u1086 \u1077 </option>\
+                        <option id="welded-opt" value="welded">\uc0\u1057 \u1074 \u1072 \u1088 \u1085 \u1086 \u1077 </option>\
+                    </select>\
+                </div>\
+                <div>\
+                    <label>4. \uc0\u1059 \u1089 \u1080 \u1083 \u1080 \u1077  (\u1053 ):</label>\
+                    <input type="number" id="force" oninput="validateForce()" placeholder="250" step="10">\
+                    <span id="force-limits" class="limit-hint">min --H - max --H</span>\
+                </div>\
+            </div>\
+        </div>\
+\
+        <!-- \uc0\u1050 \u1040 \u1056 \u1058 \u1048 \u1053 \u1050 \u1040  \u1055 \u1056 \u1059 \u1046 \u1048 \u1053 \u1067  (\u1057  \u1047 \u1059 \u1052 \u1054 \u1052 ) -->\
+        <div class="center-visual">\
+            <div class="visual-area">\
+                <div class="main-zoom-hint" onclick="openMainDrawing()">\
+                    <span>\uc0\u55357 \u56589  \u1053 \u1040 \u1046 \u1052 \u1048 \u1058 \u1045  \u1044 \u1051 \u1071  \u1059 \u1042 \u1045 \u1051 \u1048 \u1063 \u1045 \u1053 \u1048 \u1071 </span>\
+                </div>\
+                <img id="img-spring" src="img/springs/16-1-threaded.png" class="spring-drawing" onclick="openMainDrawing()" title="\uc0\u1053 \u1072 \u1078 \u1084 \u1080 \u1090 \u1077 , \u1095 \u1090 \u1086 \u1073 \u1099  \u1087 \u1088 \u1080 \u1073 \u1083 \u1080 \u1079 \u1080 \u1090 \u1100 " alt="\u1063 \u1077 \u1088 \u1090 \u1077 \u1078  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085 \u1099 ">\
+            </div>\
+        </div>\
+\
+        <!-- \uc0\u1057 \u1058 \u1054 \u1056 \u1054 \u1053 \u1040  B (\u1064 \u1090 \u1086 \u1082 ) -->\
+        <div class="side-a">\
+            <label>\uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B (\u1064 \u1090 \u1086 \u1082 ):</label>\
+            <div class="tip-box" id="box-a">\
+                <div class="zoom-hint" onclick="openDetail('a')">\uc0\u55357 \u56589  \u1055 \u1054 \u1050 \u1040 \u1047 \u1040 \u1058 \u1068  \u1063 \u1045 \u1056 \u1058 \u1045 \u1046 </div>\
+                <img id="img-a" src="img/tips/none.png" class="tip-img" onclick="openDetail('a')" alt="\uc0\u1053 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  B">\
+                <select id="attach-a" onchange="updateTipImages(); calculateTotal();"></select>\
+            </div>\
+        </div>\
+\
+        <!-- \uc0\u1057 \u1058 \u1054 \u1056 \u1054 \u1053 \u1040  A (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 ) -->\
+        <div class="side-b">\
+            <label>\uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  \u1040  (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 ):</label>\
+            <div class="tip-box" id="box-b">\
+                <div class="zoom-hint" onclick="openDetail('b')">\uc0\u55357 \u56589  \u1055 \u1054 \u1050 \u1040 \u1047 \u1040 \u1058 \u1068  \u1063 \u1045 \u1056 \u1058 \u1045 \u1046 </div>\
+                <img id="img-b" src="img/tips/none.png" class="tip-img" onclick="openDetail('b')" alt="\uc0\u1053 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  A">\
+                <select id="attach-b" onchange="updateTipImages(); calculateTotal();"></select>\
+            </div>\
+        </div>\
+\
+        <!-- \uc0\u1056 \u1045 \u1047 \u1059 \u1051 \u1068 \u1058 \u1040 \u1058 \u1067  -->\
+        <div class="center-results">\
+            <div class="result-panel">\
+                <div id="calc-result" style="font-size: 18px; font-weight: bold; text-align: center; color: #2d3748;">L1: -- \uc0\u1084 \u1084 </div>\
+                <div id="spec-info" style="font-size: 12px; color: #718096; text-align: center;"></div>\
+                <label style="text-align: center; margin-top: 10px;">\uc0\u1040 \u1056 \u1058 \u1048 \u1050 \u1059 \u1051  \u1044 \u1051 \u1071  \u1047 \u1040 \u1050 \u1040 \u1047 \u1040 :</label>\
+                <div id="order-code" class="order-code-value">---</div>\
+            </div>\
+        </div>\
+\
+    </div>\
+\
+            <!-- \uc0\u1055 \u1054 \u1044 \u1042 \u1040 \u1051  + \u1060 \u1054 \u1056 \u1052 \u1040  miniShop2 -->\
+    <form id="ms2ConfigForm"\
+          class="ms2_form"\
+          method="post"\
+          action="https://dikon.ru/catalog/gazovye-pruzhiny-amortizatory-dempfery/liftline/konfigurator/"        \
+          target="_top"\
+          onsubmit="return addToCart()">\
+\
+        <!-- \uc0\u1089 \u1083 \u1091 \u1078 \u1077 \u1073 \u1085 \u1099 \u1077  \u1087 \u1086 \u1083 \u1103  miniShop2 -->\
+        <input type="hidden" name="ms2_action" value="cart/add">\
+        <input type="hidden" name="id" value="3297"><!-- \uc0\u1047 \u1044 \u1045 \u1057 \u1068 : \u1087 \u1086 \u1076 \u1089 \u1090 \u1072 \u1074 \u1100 \u1090 \u1077  ID \u1090 \u1086 \u1074 \u1072 \u1088 \u1072  -->\
+        <input type="hidden" name="count" value="1">\
+\
+        <!-- \uc0\u1089 \u1102 \u1076 \u1072  \u1087 \u1086 \u1083 \u1086 \u1078 \u1080 \u1084  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1080  \u1087 \u1072 \u1088 \u1072 \u1084 \u1077 \u1090 \u1088 \u1099  \u1082 \u1072 \u1082  \u1086 \u1087 \u1094 \u1080 \u1080  \u1090 \u1086 \u1074 \u1072 \u1088 \u1072  -->\
+        <input type="hidden" name="options[article]" id="cfg_article">\
+        \
+\
+            <div class="footer-buttons">\
+        <!-- \uc0\u1076 \u1086 \u1073 \u1072 \u1074 \u1080 \u1090 \u1100  \u1074  \u1082 \u1086 \u1088 \u1079 \u1080 \u1085 \u1091  -->\
+        <button id="save-btn"\
+                class="btn btn-save"\
+                type="submit">\
+            \uc0\u1044 \u1054 \u1041 \u1040 \u1042 \u1048 \u1058 \u1068  \u1042  \u1050 \u1054 \u1056 \u1047 \u1048 \u1053 \u1059 \
+        </button>\
+        \
+        <button type="button" class="btn btn-reset" onclick="downloadPDF()">\
+            \uc0\u1057 \u1050 \u1040 \u1063 \u1040 \u1058 \u1068  PDF\
+        </button>\
+        <!-- \uc0\u1087 \u1077 \u1088 \u1077 \u1081 \u1090 \u1080  \u1074  \u1082 \u1086 \u1088 \u1079 \u1080 \u1085 \u1091  -->\
+        <a href="/cart/" target="_top" class="btn btn-save">\
+            \uc0\u1055 \u1045 \u1056 \u1045 \u1049 \u1058 \u1048  \u1042  \u1050 \u1054 \u1056 \u1047 \u1048 \u1053 \u1059 \
+        </a>\
+    </div>\
+</form>\
+</div>\
+\
+<!-- \uc0\u1052 \u1054 \u1044 \u1040 \u1051 \u1050 \u1040  \u1063 \u1045 \u1056 \u1058 \u1045 \u1046 \u1045 \u1049  -->\
+<div id="detailModal" class="modal" onclick="if(event.target === this) closeModal()">\
+    <div class="modal-content">\
+        <h3 id="modal-title" style="margin-top: 0; color: #2c3e50;">\uc0\u1058 \u1077 \u1093 \u1085 \u1080 \u1095 \u1077 \u1089 \u1082 \u1080 \u1081  \u1095 \u1077 \u1088 \u1090 \u1077 \u1078 </h3>\
+        <img id="modal-img" src="" class="detail-img" alt="\uc0\u1044 \u1077 \u1090 \u1072 \u1083 \u1100 \u1085 \u1099 \u1081  \u1095 \u1077 \u1088 \u1090 \u1077 \u1078 ">\
+        <div class="modal-btns">\
+            <button class="btn-confirm" onclick="closeModal()">\uc0\u1047 \u1040 \u1050 \u1056 \u1067 \u1058 \u1068 </button>\
+        </div>\
+    </div>\
+</div>\
+\
+<script>\
+    // \uc0\u1044 \u1072 \u1085 \u1085 \u1099 \u1077  \u1082 \u1086 \u1085 \u1092 \u1080 \u1075 \u1091 \u1088 \u1072 \u1090 \u1086 \u1088 \u1072 \
+    const springCatalog = \{\
+        threaded: \{\
+            "16-1": [\{l:77.5, s:20, t:53.5, r:24\}, \{l:107, s:35, t:67, r:40\}, \{l:117.5, s:40, t:72.5, r:45\}, \{l:156.5, s:60, t:91.5, r:65\}, \{l:197, s:80, t:113, r:84\}, \{l:207, s:85, t:117, r:90\}, \{l:235, s:100, t:131, r:104\}, \{l:278, s:120, t:154, r:124\}, \{l:285, s:120, t:161, r:124\}, \{l:316, s:135, t:168, r:148\}, \{l:337.5, s:150, t:183.5, r:154\}],\
+            "16-2": [\{l:128, s:40, t:78, r:50\}, \{l:168, s:57, t:109, r:59\}, \{l:206, s:80, t:121, r:85\}, \{l:218, s:85, t:128, r:90\}, \{l:248, s:100, t:138, r:110\}, \{l:268, s:105, t:158, r:110\}, \{l:288, s:120, t:163, r:125\}, \{l:328, s:140, t:178, r:150\}, \{l:367, s:160, t:203, r:164\}, \{l:408, s:180, t:223, r:185\}, \{l:453, s:195, t:253, r:200\}, \{l:447.5, s:200, t:240, r:207.5\}, \{l:489, s:220, t:264, r:225\}, \{l:547.5, s:250, t:294, r:253.5\}],\
+            "16-4": [\{l:248, s:98, t:148, r:100\}, \{l:288, s:120, t:163, r:125\}, \{l:348, s:148, t:198, r:150\}, \{l:367, s:150, t:198, r:169\}, \{l:406, s:168, t:236, r:170\}, \{l:448, s:198, t:248, r:200\}, \{l:548, s:248, t:298, r:250\}, \{l:648, s:295, t:348, r:300\}, \{l:748, s:345, t:398, r:350\}, \{l:768, s:345, t:418, r:350\}, \{l:848, s:395, t:448, r:400\}, \{l:948, s:445, t:498, r:450\}, \{l:1048, s:495, t:548, r:500\}],\
+            "16-6": [\{l:218, s:70, t:118, r:100\}, \{l:268, s:98, t:168, r:100\}, \{l:368, s:145, t:218, r:150\}, \{l:468, s:198, t:268, r:200\}, \{l:568, s:248, t:318, r:250\}, \{l:668, s:298, t:368, r:300\}, \{l:768, s:348, t:418, r:350\}, \{l:874, s:398, t:474, r:400\}, \{l:963, s:450, t:508, r:455\}, \{l:1070, s:500, t:565, r:505\}]\
+        \},\
+        welded: \{\
+            "16-1": [\{l:106, s:20, t:57, r:26, a:'A17', b:'B17'\}, \{l:146, s:40, t:78, r:45, a:'A17', b:'B17'\}, \{l:160, s:45, t:86, r:51, a:'A17', b:'B17'\}, \{l:179, s:55, t:96, r:60, a:'A17', b:'B17'\}, \{l:186, s:60, t:96, r:67, a:'A17', b:'B17'\}, \{l:224, s:80, t:111, r:90, a:'A17', b:'B17'\}, \{l:264, s:100, t:131, r:110, a:'A17', b:'B17'\}, \{l:306, s:110, t:168, r:115, a:'A17', b:'B17'\}, \{l:305.5, s:120, t:157.5, r:125, a:'A17', b:'B17'\},\{l:366, s:150, t:189, r:154, a:'A17', b:'B17'\}],\
+            "16-2": [\{l:206.5, s:60, t:108, r:65, a:'A107', b:'B23'\}, \{l:246.5, s:80, t:128, r:85, a:'A107', b:'B23'\}, \{l:256.5, s:90, t:128, r:95, a:'A107', b:'B23'\}, \{l:286.5, s:100, t:143, r:110, a:'A107', b:'B23'\}, \{l:316.5, s:120, t:158, r:125, a:'A107', b:'B23'\}, \{l:326.5, s:120, t:168, r:125, a:'A107', b:'B23'\}, \{l:354.5, s:133, t:183, r:138, a:'A107', b:'B23'\}, \{l:364.5, s:140, t:186, r:145, a:'A107', b:'B23'\}, \{l:407.5, s:160, t:201, r:173, a:'A107', b:'B23'\}, \{l:444, s:178, t:229.5, r:181, a:'A107', b:'B23'\}, \{l:485.5, s:200, t:240, r:212, a:'A107', b:'B23'\}, \{l:525.5, s:220, t:267, r:225, a:'A107', b:'B23'\}, \{l:586.5, s:250, t:291, r:262, a:'A107', b:'B23'\}],\
+            "16-4": [\{l:283, s:95, t:153, r:100, a:'A23', b:'B23'\}, \{l:383, s:145, t:203, r:150, a:'A23', b:'B23'\}, \{l:483, s:195, t:253, r:200, a:'A23', b:'B23'\}, \{l:586, s:245, t:294, r:262, a:'A23', b:'B23'\}, \{l:683, s:295, t:353, r:300, a:'A23', b:'B23'\}, \{l:783, s:345, t:403, r:350, a:'A23', b:'B23'\}, \{l:883, s:395, t:453, r:400, a:'A23', b:'B23'\}, \{l:983, s:445, t:503, r:450, a:'A23', b:'B23'\}, \{l:1083, s:495, t:553, r:500, a:'A23', b:'B23'\}],\
+            "16-6": [] \
+        \}\
+    \};\
+\
+    const attachments = [\
+        // \uc0\u1056 \u1045 \u1047 \u1068 \u1041 \u1040  - \u1056 \u1040 \u1047 \u1044 \u1045 \u1051 \u1068 \u1053 \u1040 \u1071  \u1076 \u1083 \u1103  \u1082 \u1072 \u1078 \u1076 \u1086 \u1081  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099 \
+    // \uc0\u1044 \u1083 \u1103  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  B (\u1096 \u1090 \u1086 \u1082 ) - \u1083 \u1077 \u1074 \u1072 \u1103  \u1082 \u1086 \u1083 \u1086 \u1085 \u1082 \u1072 \
+    \{ id: "thread-16-1-b", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-1"], img: "img/tips/thread-16-1-b.png", detail: "img/tips/thread-16-1-b.png" \},\
+    \{ id: "thread-16-2-b", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-2"], img: "img/tips/thread-16-2-b.png", detail: "img/tips/thread-16-2-b.png" \},\
+    \{ id: "thread-16-4-b", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-4"], img: "img/tips/thread-16-4-b.png", detail: "img/tips/thread-16-4-b.png" \},\
+    \{ id: "thread-16-6-b", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-6"], img: "img/tips/thread-16-6-b.png", detail: "img/tips/thread-16-6-b.png" \},\
+    \
+    // \uc0\u1044 \u1083 \u1103  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  A (\u1090 \u1088 \u1091 \u1073 \u1082 \u1072 ) - \u1087 \u1088 \u1072 \u1074 \u1072 \u1103  \u1082 \u1086 \u1083 \u1086 \u1085 \u1082 \u1072 \
+    \{ id: "thread-16-1-a", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-1"], img: "img/tips/thread-16-1-a.png", detail: "img/tips/thread-16-1-a.png" \},\
+    \{ id: "thread-16-2-a", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-2"], img: "img/tips/thread-16-2-a.png", detail: "img/tips/thread-16-2-a.png" \},\
+    \{ id: "thread-16-4-a", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-4"], img: "img/tips/thread-16-4-a.png", detail: "img/tips/thread-16-4-a.png" \},\
+    \{ id: "thread-16-6-a", name: "\uc0\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ", dist: 0, series: ["16-6"], img: "img/tips/thread-16-6-a.png", detail: "img/tips/thread-16-6-a.png" \},\
+        // \uc0\u1054 \u1041 \u1065 \u1048 \u1045  \u1076 \u1083 \u1103  \u1086 \u1073 \u1077 \u1080 \u1093  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085  (\u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1080 )\
+    \{ id: "A246-B246", name: "\uc0\u1064 \u1072 \u1088 \u1085 \u1080 \u1088  \u1055 \u1083 \u1072 \u1089 \u1090 \u1080 \u1082  M8", dist: 19, series: ["16-1", "16-2"], img: "img/tips/A246-B246.png", detail: "img/details/A246-detail.png" \},\
+    \{ id: "A201-B201", name: "\uc0\u1064 \u1072 \u1088 \u1085 \u1080 \u1088  \u1057 \u1090 \u1072 \u1083 \u1100  M8", dist: 19, series: ["16-1", "16-2"], img: "img/tips/A201-B201.png", detail: "img/details/A201-detail.png" \},\
+    \{ id: "A207-B207", name: "\uc0\u1064 \u1072 \u1088 \u1085 \u1080 \u1088  \u1057 \u1090 \u1072 \u1083 \u1100  M8", dist: 19, series: ["16-4", "16-6"], img: "img/tips/A201-B201.png", detail: "img/details/A201-detail.png" \},\
+    \{ id: "A129-B129", name: "\uc0\u1064 \u1072 \u1088 \u1085 \u1080 \u1088  \u1061 \u1088 \u1086 \u1084  M8", dist: 30, series: ["16-4", "16-6"], img: "img/tips/A129-B129.png", detail: "img/details/A129-detail.png" \},\
+    \{ id: "A199-B199", name: "\uc0\u1064 \u1072 \u1088 \u1085 \u1080 \u1088  \u1061 \u1088 \u1086 \u1084  M10", dist: 30, series: ["16-4", "16-6"], img: "img/tips/A199-B199.png", detail: "img/details/A199-detail.png" \},\
+    \{ id: "A30-B30", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1", dist: 16, series: ["16-4", "16-6"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A31-B31", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d810.1", dist: 16, series: ["16-4", "16-6"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A104-B104", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d812", dist: 16, series: ["16-1", "16-2"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A220-B220", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d86.1", dist: 16, series: ["16-1", "16-2"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A221-B221", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1", dist: 16, series: ["16-1", "16-2"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A222-B222", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d810.1", dist: 16, series: ["16-1", "16-2"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A26-B26", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d812", dist: 16, series: ["16-4", "16-6"], img: "img/tips/A26-B26.png", detail: "img/details/A26-detail.png" \},\
+    \{ id: "A1-B1", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d86.1 (28)", dist: 28, series: ["16-1", "16-2"], img: "img/tips/A1-B1.png", detail: "img/details/A1-detail.png" \},\
+    \{ id: "A2-B2", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1 (28)", dist: 28, series: ["16-1", "16-2"], img: "img/tips/A1-B1.png", detail: "img/details/A1-detail.png" \},\
+    \{ id: "A13-B13", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1 (28)", dist: 28, series: ["16-4", "16-6"], img: "img/tips/A1-B1.png", detail: "img/details/A1-detail.png" \},\
+    \{ id: "A20-B20", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d810.1 (22)", dist: 22, series: ["16-4", "16-6"], img: "img/tips/A20-B20.png", detail: "img/details/A20-detail.png" \},\
+    \{ id: "A10-B10", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1 (13)", dist: 13, series: ["16-1", "16-2"], img: "img/tips/A10-B10.png", detail: "img/details/A10-detail.png" \},\
+    \{ id: "A223-B223", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d86.1 (13)", dist: 13, series: ["16-1", "16-2"], img: "img/tips/A10-B10.png", detail: "img/details/A10-detail.png" \},\
+    \{ id: "A111-B111", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1094 \u1080 \u1085 \u1082  \'d88.1 (22)", dist: 22, series: ["16-4", "16-6"], img: "img/tips/A20-B20.png", detail: "img/details/A20-detail.png" \},\
+    \{ id: "A232-B232", name: "\uc0\u1042 \u1080 \u1083 \u1100 \u1095 \u1072 \u1090 \u1072 \u1103  \u1075 \u1086 \u1083 \u1086 \u1074 \u1082 \u1072  M6", dist: 24, series: ["16-1", "16-2"], img: "img/tips/A232-B232.png", detail: "img/details/A232-detail.png" \},\
+    \{ id: "A412-B412", name: "\uc0\u1055 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072  \u1087 \u1083 \u1072 \u1089 \u1090 \u1080 \u1082 ", dist: 16, series: ["16-4", "16-6"], img: "img/tips/A412-B412.png", detail: "img/details/A412-detail.png" \},\
+    \{ id: "A21-B21", name: "\uc0\u1042 \u1080 \u1083 \u1100 \u1095 \u1072 \u1090 \u1072 \u1103  \u1075 \u1086 \u1083 \u1086 \u1074 \u1082 \u1072  M8", dist: 32, series: ["16-4", "16-6"], img: "img/tips/A21-B21.png", detail: "img/details/A21-detail.png" \}\
+    \
+    \
+];\
+\
+\
+    const seriesLimits = \{\
+        "16-1": \{ min: 50, max: 400, rod: 6, tube: 15, thread: "M6" \},\
+        "16-2": \{ min: 80, max: 750, rod: 8, tube: 18.5, thread: "M6" \},\
+        "16-4": \{ min: 100, max: 1200, rod: 10, tube: 22, thread: "M8" \},\
+        "16-6": \{ min: 200, max: 2000, rod: 14, tube: 28, thread: "M8" \}\
+    \};\
+\
+    // \uc0\u1048 \u1085 \u1080 \u1094 \u1080 \u1072 \u1083 \u1080 \u1079 \u1072 \u1094 \u1080 \u1103  \u1087 \u1088 \u1080  \u1079 \u1072 \u1075 \u1088 \u1091 \u1079 \u1082 \u1077 \
+    document.addEventListener('DOMContentLoaded', function() \{\
+        updateUI();\
+    \});\
+\
+    function updateUI() \{\
+        const series = document.getElementById('series').value;\
+        const weldedOpt = document.getElementById('welded-opt');\
+        let conn = document.getElementById('connection').value;\
+\
+        if (series === "16-6") \{\
+            weldedOpt.disabled = true;\
+            if (conn === "welded") \{ \
+                document.getElementById('connection').value = "threaded"; \
+                conn = "threaded"; \
+            \}\
+        \} else \{ \
+            weldedOpt.disabled = false; \
+        \}\
+\
+        const dimSel = document.getElementById('dimensions-select');\
+        dimSel.innerHTML = "";\
+        const data = springCatalog[conn][series];\
+        if (data && data.length > 0) \{\
+            data.forEach((p, idx) => \{\
+                dimSel.add(new Option(`L: $\{p.l\} \uc0\u1084 \u1084 (+-2\u1084 \u1084 ) / \u1061 \u1086 \u1076 : $\{p.s\} \u1084 \u1084 `, idx));\
+            \});\
+        \} else \{\
+            dimSel.add(new Option("\uc0\u1053 \u1077 \u1090  \u1076 \u1086 \u1089 \u1090 \u1091 \u1087 \u1085 \u1099 \u1093  \u1088 \u1072 \u1079 \u1084 \u1077 \u1088 \u1086 \u1074 ", "0"));\
+        \}\
+\
+        const boxA = document.getElementById('box-a');\
+        const boxB = document.getElementById('box-b');\
+        const selA = document.getElementById('attach-a');\
+        const selB = document.getElementById('attach-b');\
+\
+        if (conn === "welded") \{\
+            boxA.classList.add('disabled');\
+            boxB.classList.add('disabled');\
+            selA.disabled = true; \
+            selB.disabled = true;\
+        \} else \{\
+            boxA.classList.remove('disabled');\
+            boxB.classList.remove('disabled');\
+            selA.disabled = false; \
+            selB.disabled = false;\
+            fillAttach('attach-a', series);\
+            fillAttach('attach-b', series);\
+        \}\
+\
+        const lim = seriesLimits[series];\
+        const forceInp = document.getElementById('force');\
+        forceInp.min = lim.min;\
+        forceInp.max = lim.max;\
+        forceInp.placeholder = lim.min + " - " + lim.max;\
+        document.getElementById('force-limits').innerText = `min $\{lim.min\}H \'97 max $\{lim.max\}H`;\
+        \
+        updateTipImages();\
+        validateForce();\
+        calculateTotal();\
+    \}\
+\
+    function fillAttach(id, series) \{\
+    const sel = document.getElementById(id);\
+    sel.innerHTML = "";\
+    \
+    // \uc0\u1057 \u1086 \u1079 \u1076 \u1072 \u1077 \u1084  \u1079 \u1072 \u1075 \u1086 \u1083 \u1086 \u1074 \u1086 \u1082  \u1082 \u1072 \u1082  "\u1087 \u1091 \u1089 \u1090 \u1086 \u1081 " \u1072 \u1082 \u1090 \u1080 \u1074 \u1085 \u1099 \u1081  \u1087 \u1091 \u1085 \u1082 \u1090  \u1087 \u1086  \u1091 \u1084 \u1086 \u1083 \u1095 \u1072 \u1085 \u1080 \u1102 \
+    const headerOption = document.createElement('option');\
+    headerOption.value = ""; \
+    headerOption.text = "\uc0\u1055 \u1054 \u1044 \u1057 \u1054 \u1045 \u1044 \u1048 \u1053 \u1045 \u1053 \u1048 \u1071 ";\
+    headerOption.selected = true; \
+    sel.appendChild(headerOption);\
+    \
+    // \uc0\u1056 \u1072 \u1079 \u1076 \u1077 \u1083 \u1080 \u1090 \u1077 \u1083 \u1100 \
+    const separatorOption = document.createElement('option');\
+    separatorOption.value = "";\
+    separatorOption.text = "\uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 ";\
+    separatorOption.disabled = true;\
+    sel.appendChild(separatorOption);\
+    \
+    const isLeftSide = id === 'attach-a'; // true \uc0\u1076 \u1083 \u1103  \u1083 \u1077 \u1074 \u1086 \u1081  \u1082 \u1086 \u1083 \u1086 \u1085 \u1082 \u1080  (\u1096 \u1090 \u1086 \u1082 )\
+    \
+    attachments.filter(a => \{\
+        if (!a.series.includes(series)) return false;\
+        if (a.id.startsWith('thread-')) \{\
+            return isLeftSide ? a.id.endsWith('-b') : a.id.endsWith('-a');\
+        \}\
+        return true;\
+    \}).forEach(a => \{\
+        sel.add(new Option(`$\{a.name\} (+$\{a.dist\}\uc0\u1084 \u1084 )`, `$\{a.id\}|$\{a.dist\}`));\
+    \});\
+    \
+    if (sel.options.length <= 2) \{\
+        sel.add(new Option("\uc0\u1053 \u1077 \u1090  \u1076 \u1086 \u1089 \u1090 \u1091 \u1087 \u1085 \u1099 \u1093  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1086 \u1074 ", "none|0"));\
+    \}\
+\}\
+    \
+    // \uc0\u1044 \u1086 \u1073 \u1072 \u1074 \u1100 \u1090 \u1077  \u1085 \u1086 \u1074 \u1091 \u1102  \u1092 \u1091 \u1085 \u1082 \u1094 \u1080 \u1102  \u1076 \u1083 \u1103  \u1087 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1080 , \u1074 \u1099 \u1073 \u1088 \u1072 \u1085  \u1083 \u1080  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \
+function isTipSelected(side) \{\
+    const selectId = side === 'a' ? 'attach-a' : 'attach-b';\
+    const val = document.getElementById(selectId).value.split('|')[0];\
+    \
+    // \uc0\u1045 \u1089 \u1083 \u1080  \u1101 \u1090 \u1086  \u1079 \u1072 \u1075 \u1086 \u1083 \u1086 \u1074 \u1086 \u1082  \u1080 \u1083 \u1080  \u1088 \u1072 \u1079 \u1076 \u1077 \u1083 \u1080 \u1090 \u1077 \u1083 \u1100  (\u1087 \u1091 \u1089 \u1090 \u1086 \u1077  \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077 ) \u1080 \u1083 \u1080  none\
+    return val && val !== '' && !val.startsWith('thread-') && val !== 'none';\
+\}\
+\
+function updateTipImages() \{\
+    const series = document.getElementById('series').value;\
+    const conn = document.getElementById('connection').value;\
+    \
+    // \uc0\u1054 \u1089 \u1085 \u1086 \u1074 \u1085 \u1072 \u1103  \u1082 \u1072 \u1088 \u1090 \u1080 \u1085 \u1082 \u1072  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085 \u1099 \
+    document.getElementById('img-spring').src = `img/springs/$\{series\}-$\{conn\}.png`;\
+\
+    if (conn === "threaded") \{\
+        const valAraw = document.getElementById('attach-a').value; // \uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B (\u1064 \u1090 \u1086 \u1082 )\
+        const valBraw = document.getElementById('attach-b').value; // \uc0\u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  A (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 )\
+        \
+        const valA = valAraw ? valAraw.split('|')[0] : "";\
+        const valB = valBraw ? valBraw.split('|')[0] : "";\
+        \
+        const tipA = attachments.find(a => a.id === valA);\
+        const tipB = attachments.find(a => a.id === valB);\
+        \
+        // \uc0\u1054 \u1073 \u1085 \u1086 \u1074 \u1083 \u1103 \u1077 \u1084  \u1082 \u1072 \u1088 \u1090 \u1080 \u1085 \u1082 \u1091  \u1076 \u1083 \u1103  \u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  B (\u1064 \u1090 \u1086 \u1082 )\
+        if (valA && tipA) \{\
+            document.getElementById('img-a').src = tipA.img;\
+        \} else \{\
+            document.getElementById('img-a').src = "img/tips/none.png";\
+        \}\
+\
+        // \uc0\u1054 \u1073 \u1085 \u1086 \u1074 \u1083 \u1103 \u1077 \u1084  \u1082 \u1072 \u1088 \u1090 \u1080 \u1085 \u1082 \u1091  \u1076 \u1083 \u1103  \u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1099  A (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 )\
+        if (valB && tipB) \{\
+            document.getElementById('img-b').src = tipB.img;\
+        \} else \{\
+            document.getElementById('img-b').src = "img/tips/none.png";\
+        \}\
+        \
+        // \uc0\u1042 \u1080 \u1076 \u1080 \u1084 \u1086 \u1089 \u1090 \u1100  \u1082 \u1085 \u1086 \u1087 \u1086 \u1082  \u1079 \u1091 \u1084 \u1072 \
+        const zoomHintA = document.querySelector('#box-a .zoom-hint');\
+        const zoomHintB = document.querySelector('#box-b .zoom-hint');\
+        if (zoomHintA) zoomHintA.style.display = isTipSelected('a') ? 'flex' : 'none';\
+        if (zoomHintB) zoomHintB.style.display = isTipSelected('b') ? 'flex' : 'none';\
+        \
+    \} else \{\
+        // \uc0\u1044 \u1083 \u1103  \u1089 \u1074 \u1072 \u1088 \u1085 \u1086 \u1075 \u1086  \u1090 \u1080 \u1087 \u1072 \
+        document.getElementById('img-a').src = "img/tips/welded-eye.png";\
+        document.getElementById('img-b').src = "img/tips/welded-eye.png";\
+    \}\
+\}\
+\
+    function openDetail(side) \{\
+        const conn = document.getElementById('connection').value;\
+        if (conn === 'welded') \{\
+            alert("\uc0\u1044 \u1083 \u1103  \u1089 \u1074 \u1072 \u1088 \u1085 \u1086 \u1075 \u1086  \u1089 \u1086 \u1077 \u1076 \u1080 \u1085 \u1077 \u1085 \u1080 \u1103  \u1085 \u1077 \u1090  \u1076 \u1077 \u1090 \u1072 \u1083 \u1100 \u1085 \u1099 \u1093  \u1095 \u1077 \u1088 \u1090 \u1077 \u1078 \u1077 \u1081  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1086 \u1074 ");\
+            return;\
+        \}\
+        const selectId = side === 'a' ? 'attach-a' : 'attach-b';\
+        const val = document.getElementById(selectId).value.split('|')[0];\
+        const tip = attachments.find(a => a.id === val);\
+        if (tip && tip.id !== 'none' && tip.detail) \{\
+            document.getElementById('modal-title').innerText = "\uc0\u1063 \u1077 \u1088 \u1090 \u1077 \u1078  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 ";\
+            document.getElementById('modal-img').src = tip.detail;\
+            document.getElementById('detailModal').style.display = 'flex';\
+        \} else \{\
+            alert("\uc0\u1044 \u1083 \u1103  \u1101 \u1090 \u1086 \u1075 \u1086  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072  \u1085 \u1077 \u1090  \u1076 \u1077 \u1090 \u1072 \u1083 \u1100 \u1085 \u1086 \u1075 \u1086  \u1095 \u1077 \u1088 \u1090 \u1077 \u1078 \u1072 ");\
+        \}\
+    \}\
+\
+    function openMainDrawing() \{\
+        const currentSrc = document.getElementById('img-spring').src;\
+        document.getElementById('modal-title').innerText = "\uc0\u1057 \u1093 \u1077 \u1084 \u1072  \u1087 \u1088 \u1091 \u1078 \u1080 \u1085 \u1099 ";\
+        document.getElementById('modal-img').src = currentSrc;\
+        document.getElementById('detailModal').style.display = 'flex';\
+    \}\
+\
+    function closeModal() \{ \
+        document.getElementById('detailModal').style.display = 'none'; \
+    \}\
+\
+    function validateForce() \{\
+        const series = document.getElementById('series').value;\
+        const lim = seriesLimits[series];\
+        const forceInp = document.getElementById('force');\
+        const saveBtn = document.getElementById('save-btn');\
+        const val = parseInt(forceInp.value);\
+    \
+       // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1072  \u1085 \u1072  \u1082 \u1088 \u1072 \u1090 \u1085 \u1086 \u1089 \u1090 \u1100  10\
+       if (val % 10 !== 0) \{\
+            forceInp.classList.add('error');\
+            saveBtn.disabled = true;\
+            document.getElementById('force-limits').innerText = `\uc0\u1047 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  \u1076 \u1086 \u1083 \u1078 \u1085 \u1086  \u1073 \u1099 \u1090 \u1100  \u1082 \u1088 \u1072 \u1090 \u1085 \u1086  10`;\
+        \} else if (val < lim.min || val > lim.max || isNaN(val)) \{\
+            forceInp.classList.add('error');\
+            saveBtn.disabled = true;\
+            document.getElementById('force-limits').innerText = `min $\{lim.min\}H \'97 max $\{lim.max\}H`;\
+        \} else \{\
+            forceInp.classList.remove('error');\
+            saveBtn.disabled = false;\
+            document.getElementById('force-limits').innerText = `min $\{lim.min\}H \'97 max $\{lim.max\}H`;\
+        \}\
+    \
+        calculateTotal();\
+    \}\
+\
+    function calculateTotal() \{\
+    const series = document.getElementById('series').value;\
+    const conn = document.getElementById('connection').value;\
+    const dimIdx = document.getElementById('dimensions-select').value;\
+    \
+    if (!springCatalog[conn] || !springCatalog[conn][series] || !springCatalog[conn][series][dimIdx]) \{\
+        document.getElementById('order-code').innerText = "---";\
+        document.getElementById('calc-result').innerText = "L1: -- \uc0\u1084 \u1084 ";\
+        return;\
+    \}\
+    \
+    const p = springCatalog[conn][series][dimIdx];\
+    const force = document.getElementById('force').value || "???";\
+\
+    if (conn === "threaded") \{\
+        const sideAraw = document.getElementById('attach-b').value; // \uc0\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 \
+        const sideBraw = document.getElementById('attach-a').value; // \uc0\u1064 \u1090 \u1086 \u1082 \
+        \
+        // \uc0\u1045 \u1089 \u1083 \u1080  \u1093 \u1086 \u1090 \u1103  \u1073 \u1099  \u1086 \u1076 \u1085 \u1072  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  \u1085 \u1077  \u1074 \u1099 \u1073 \u1088 \u1072 \u1085 \u1072  (\u1089 \u1090 \u1086 \u1080 \u1090  "\u1055 \u1054 \u1044 \u1057 \u1054 \u1045 \u1044 \u1048 \u1053 \u1045 \u1053 \u1048 \u1071 ")\
+        if (!sideAraw || !sideBraw) \{\
+            document.getElementById('order-code').innerText = "---";\
+            document.getElementById('calc-result').innerText = "\uc0\u1042 \u1099 \u1073 \u1077 \u1088 \u1080 \u1090 \u1077  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1080 ";\
+            return;\
+        \}\
+\
+        const sideA = sideAraw.split('|');\
+        const sideB = sideBraw.split('|');\
+        \
+        let codeA = (sideA[0] === "none" || sideA[0].startsWith("thread-")) \
+            ? "AM" + seriesLimits[series].thread.replace('M','') \
+            : sideA[0].split('-')[0];\
+        \
+        let codeB = (sideB[0] === "none" || sideB[0].startsWith("thread-")) \
+            ? "BM" + seriesLimits[series].thread.replace('M','') \
+            : sideB[0].split('-')[1] || sideB[0].replace('A','B');\
+        \
+        const l1 = p.l + (parseFloat(sideA[1]) || 0) + (parseFloat(sideB[1]) || 0);\
+        \
+        document.getElementById('order-code').innerText = `$\{series\}-$\{p.t\}-$\{p.r\}-$\{codeA\}-$\{codeB\}-$\{force\}N`;\
+        \
+        // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1072  \u1085 \u1072  "\u1041 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1072 " \u1076 \u1083 \u1103  \u1086 \u1090 \u1086 \u1073 \u1088 \u1072 \u1078 \u1077 \u1085 \u1080 \u1103  L \u1080 \u1083 \u1080  L1\
+        const isBothPlain = sideA[0].startsWith('thread-') && sideB[0].startsWith('thread-');\
+        if (isBothPlain) \{\
+            document.getElementById('calc-result').innerText = `L (\uc0\u1076 \u1083 \u1080 \u1085 \u1072  \u1073 \u1077 \u1079  \u1091 \u1095 \u1077 \u1090 \u1072  \u1088 \u1077 \u1079 \u1100 \u1073 \u1099 ): $\{p.l.toFixed(1)\} \u1084 \u1084 `;\
+        \} else \{\
+            document.getElementById('calc-result').innerText = `L1 (\uc0\u1084 \u1077 \u1078 \u1076 \u1091  \u1086 \u1089 \u1103 \u1084 \u1080 ): $\{l1.toFixed(1)\} \u1084 \u1084 `;\
+        \}\
+    \} else \{\
+        // \uc0\u1057 \u1074 \u1072 \u1088 \u1085 \u1086 \u1077  \u1089 \u1086 \u1077 \u1076 \u1080 \u1085 \u1077 \u1085 \u1080 \u1077 \
+        document.getElementById('order-code').innerText = `$\{series\}-$\{p.t\}-$\{p.r\}-$\{p.a\}-$\{p.b\}-$\{force\}N`;\
+        document.getElementById('calc-result').innerText = `L1 (\uc0\u1084 \u1077 \u1078 \u1076 \u1091  \u1086 \u1089 \u1103 \u1084 \u1080 ): $\{p.l.toFixed(1)\} \u1084 \u1084 `;\
+    \}\
+\
+    document.getElementById('spec-info').innerHTML = `\uc0\u1055 \u1072 \u1088 \u1072 \u1084 \u1077 \u1090 \u1088 \u1099 : \u1064 \u1090 \u1086 \u1082  \'d8$\{seriesLimits[series].rod\}\u1084 \u1084  / \u1058 \u1088 \u1091 \u1073 \u1082 \u1072  \'d8$\{seriesLimits[series].tube\}\u1084 \u1084 .`;\
+\}\
+\
+\
+    \
+\
+\
+\
+    function validateForce() \{\
+    const series = document.getElementById('series').value;\
+    const lim = seriesLimits[series];\
+    const forceInp = document.getElementById('force');\
+    const saveBtn = document.getElementById('save-btn');\
+    \
+    // \uc0\u1059 \u1073 \u1080 \u1088 \u1072 \u1077 \u1084  \u1083 \u1080 \u1096 \u1085 \u1080 \u1077  \u1087 \u1088 \u1086 \u1073 \u1077 \u1083 \u1099  \u1080  \u1087 \u1072 \u1088 \u1089 \u1080 \u1084  \u1095 \u1080 \u1089 \u1083 \u1086 \
+    const val = parseInt(forceInp.value.trim(), 10);\
+\
+    let valid = true;\
+\
+    // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1072  \u1085 \u1072  \u1095 \u1080 \u1089 \u1083 \u1086  \u1080  \u1082 \u1088 \u1072 \u1090 \u1085 \u1086 \u1089 \u1090 \u1100  10\
+    if (isNaN(val) || val % 10 !== 0) \{\
+        valid = false;\
+        forceInp.classList.add('error');\
+        saveBtn.disabled = true;\
+        document.getElementById('force-limits').innerText = `\uc0\u1047 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  \u1076 \u1086 \u1083 \u1078 \u1085 \u1086  \u1073 \u1099 \u1090 \u1100  \u1082 \u1088 \u1072 \u1090 \u1085 \u1086  10`;\
+    \}\
+    // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1072  \u1085 \u1072  \u1087 \u1088 \u1077 \u1076 \u1077 \u1083 \u1099  \u1089 \u1077 \u1088 \u1080 \u1080 \
+    else if (val < lim.min || val > lim.max) \{\
+        valid = false;\
+        forceInp.classList.add('error');\
+        saveBtn.disabled = true;\
+        document.getElementById('force-limits').innerText = `min $\{lim.min\}H \'97 max $\{lim.max\}H`;\
+    \} \
+    else \{\
+        forceInp.classList.remove('error');\
+        saveBtn.disabled = false;\
+        document.getElementById('force-limits').innerText = `min $\{lim.min\}H \'97 max $\{lim.max\}H`;\
+    \}\
+\
+    // \uc0\u1055 \u1077 \u1088 \u1077 \u1089 \u1095 \u1077 \u1090  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083 \u1072  \u1080  \u1076 \u1083 \u1080 \u1085 \u1099 \
+    calculateTotal();\
+\
+    return valid; // \uc0\u9989  \u1042 \u1086 \u1079 \u1074 \u1088 \u1072 \u1097 \u1072 \u1077 \u1084  \u1088 \u1077 \u1079 \u1091 \u1083 \u1100 \u1090 \u1072 \u1090  \u1087 \u1088 \u1086 \u1074 \u1077 \u1088 \u1082 \u1080 \
+\}\
+\
+function saveConfiguration() \{\
+    // \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1103 \u1077 \u1084  \u1082 \u1086 \u1088 \u1088 \u1077 \u1082 \u1090 \u1085 \u1086 \u1089 \u1090 \u1100  \u1089 \u1080 \u1083 \u1099  \u1087 \u1077 \u1088 \u1077 \u1076  \u1082 \u1086 \u1087 \u1080 \u1088 \u1086 \u1074 \u1072 \u1085 \u1080 \u1077 \u1084 \
+    if (!validateForce()) \{\
+        alert("\uc0\u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1074 \u1074 \u1077 \u1076 \u1080 \u1090 \u1077  \u1082 \u1086 \u1088 \u1088 \u1077 \u1082 \u1090 \u1085 \u1086 \u1077  \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  \u1091 \u1089 \u1080 \u1083 \u1080 \u1103 ");\
+        return;\
+    \}\
+    \
+    const code = document.getElementById('order-code').innerText;\
+\
+    // \uc0\u1050 \u1086 \u1087 \u1080 \u1088 \u1091 \u1077 \u1084  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1074  \u1073 \u1091 \u1092 \u1077 \u1088  \u1086 \u1073 \u1084 \u1077 \u1085 \u1072 \
+    navigator.clipboard.writeText(code).then(function() \{\
+        alert("\uc0\u1040 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1089 \u1082 \u1086 \u1087 \u1080 \u1088 \u1086 \u1074 \u1072 \u1085  \u1074  \u1073 \u1091 \u1092 \u1077 \u1088  \u1086 \u1073 \u1084 \u1077 \u1085 \u1072 :\\n" + code);\
+    \}).catch(function() \{\
+        // \uc0\u1045 \u1089 \u1083 \u1080  \u1085 \u1077  \u1091 \u1076 \u1072 \u1083 \u1086 \u1089 \u1100  \u1089 \u1082 \u1086 \u1087 \u1080 \u1088 \u1086 \u1074 \u1072 \u1090 \u1100 , \u1087 \u1086 \u1082 \u1072 \u1079 \u1099 \u1074 \u1072 \u1077 \u1084  \u1089 \u1086 \u1086 \u1073 \u1097 \u1077 \u1085 \u1080 \u1077 \
+        alert("\uc0\u1042 \u1072 \u1096  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1076 \u1083 \u1103  \u1079 \u1072 \u1082 \u1072 \u1079 \u1072 :\\n" + code);\
+    \});\
+\}\
+\
+\
+    function resetConfiguration() \{\
+        if (confirm("\uc0\u1057 \u1073 \u1088 \u1086 \u1089 \u1080 \u1090 \u1100  \u1074 \u1089 \u1077  \u1085 \u1072 \u1089 \u1090 \u1088 \u1086 \u1081 \u1082 \u1080 ?")) \{\
+            document.getElementById('series').value = "16-1";\
+            document.getElementById('connection').value = "threaded";\
+            document.getElementById('force').value = "";\
+            updateUI();\
+        \}\
+    \}\
+\
+    function addToCart() \{\
+    // \uc0\u1087 \u1088 \u1086 \u1074 \u1077 \u1088 \u1103 \u1077 \u1084  \u1091 \u1089 \u1080 \u1083 \u1080 \u1077 \
+    if (!validateForce()) \{\
+        alert("\uc0\u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1074 \u1074 \u1077 \u1076 \u1080 \u1090 \u1077  \u1082 \u1086 \u1088 \u1088 \u1077 \u1082 \u1090 \u1085 \u1086 \u1077  \u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  \u1091 \u1089 \u1080 \u1083 \u1080 \u1103 ");\
+        return false;\
+    \}\
+\
+    // \uc0\u1087 \u1077 \u1088 \u1077 \u1089 \u1095 \u1105 \u1090  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083 \u1072 \
+    calculateTotal();\
+\
+    const series = document.getElementById('series').value;\
+    const conn   = document.getElementById('connection').value;\
+    const dimIdx = document.getElementById('dimensions-select').value;\
+    const force  = document.getElementById('force').value.trim();\
+\
+    const p = springCatalog[conn][series][dimIdx];\
+\
+    // \uc0\u1075 \u1086 \u1090 \u1086 \u1074 \u1099 \u1081  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1073 \u1077 \u1088 \u1105 \u1084  \u1080 \u1079  \u1073 \u1083 \u1086 \u1082 \u1072  \u1088 \u1077 \u1079 \u1091 \u1083 \u1100 \u1090 \u1072 \u1090 \u1072 \
+    const code = document.getElementById('order-code').innerText;\
+\
+    // \uc0\u1079 \u1072 \u1087 \u1080 \u1089 \u1099 \u1074 \u1072 \u1077 \u1084  \u1072 \u1088 \u1090 \u1080 \u1082 \u1091 \u1083  \u1074  \u1089 \u1082 \u1088 \u1099 \u1090 \u1086 \u1077  \u1087 \u1086 \u1083 \u1077  \u1076 \u1083 \u1103  miniShop2\
+    document.getElementById('cfg_article').value = code;\
+\
+    // \uc0\u1087 \u1086 \u1082 \u1072 \u1079 \u1099 \u1074 \u1072 \u1077 \u1084  \u1089 \u1086 \u1086 \u1073 \u1097 \u1077 \u1085 \u1080 \u1077  \u1087 \u1086 \u1083 \u1100 \u1079 \u1086 \u1074 \u1072 \u1090 \u1077 \u1083 \u1102 \
+    alert("\uc0\u1055 \u1088 \u1091 \u1078 \u1080 \u1085 \u1072  \u1076 \u1086 \u1073 \u1072 \u1074 \u1083 \u1077 \u1085 \u1072  \u1074  \u1082 \u1086 \u1088 \u1079 \u1080 \u1085 \u1091 ");\
+\
+    // \uc0\u1086 \u1090 \u1087 \u1088 \u1072 \u1074 \u1083 \u1103 \u1077 \u1084  \u1092 \u1086 \u1088 \u1084 \u1091  (miniShop2 \u1076 \u1086 \u1073 \u1072 \u1074 \u1080 \u1090  \u1090 \u1086 \u1074 \u1072 \u1088  \u1074  \u1082 \u1086 \u1088 \u1079 \u1080 \u1085 \u1091 ,\
+    // \uc0\u1089 \u1090 \u1088 \u1072 \u1085 \u1080 \u1094 \u1072  /konfigurator/ \u1087 \u1088 \u1086 \u1089 \u1090 \u1086  \u1087 \u1077 \u1088 \u1077 \u1079 \u1072 \u1075 \u1088 \u1091 \u1079 \u1080 \u1090 \u1089 \u1103 )\
+    return true;\
+\}\
+\
+async function downloadPDF() \{\
+    // 1. \uc0\u1055 \u1088 \u1086 \u1074 \u1077 \u1088 \u1103 \u1077 \u1084  \u1074 \u1072 \u1083 \u1080 \u1076 \u1085 \u1086 \u1089 \u1090 \u1100 \
+    if (!validateForce()) \{\
+        alert("\uc0\u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1074 \u1074 \u1077 \u1076 \u1080 \u1090 \u1077  \u1082 \u1086 \u1088 \u1088 \u1077 \u1082 \u1090 \u1085 \u1086 \u1077  \u1091 \u1089 \u1080 \u1083 \u1080 \u1077  \u1087 \u1077 \u1088 \u1077 \u1076  \u1089 \u1082 \u1072 \u1095 \u1080 \u1074 \u1072 \u1085 \u1080 \u1077 \u1084  PDF.");\
+        return;\
+    \}\
+\
+    // 2. \uc0\u1057 \u1086 \u1073 \u1080 \u1088 \u1072 \u1077 \u1084  \u1076 \u1072 \u1085 \u1085 \u1099 \u1077 \
+    const article = document.getElementById('order-code').innerText;\
+    const series = document.getElementById('series').value;\
+    const dimsSelect = document.getElementById('dimensions-select');\
+    const dimsText = dimsSelect.options[dimsSelect.selectedIndex].text;\
+    const force = document.getElementById('force').value + " N";\
+    \
+    // \uc0\u1055 \u1054 \u1051 \u1059 \u1063 \u1040 \u1045 \u1052  \u1047 \u1053 \u1040 \u1063 \u1045 \u1053 \u1048 \u1045  L1 \u1048 \u1047  \u1056 \u1045 \u1047 \u1059 \u1051 \u1068 \u1058 \u1040 \u1058 \u1040 \
+    let l1 = document.getElementById('calc-result').innerText;\
+    \
+    // \uc0\u1055 \u1056 \u1054 \u1042 \u1045 \u1056 \u1071 \u1045 \u1052 , \u1042 \u1067 \u1041 \u1056 \u1040 \u1053 \u1067  \u1051 \u1048  "\u1041 \u1045 \u1047  \u1053 \u1040 \u1050 \u1054 \u1053 \u1045 \u1063 \u1053 \u1048 \u1050 \u1040 " \u1057  \u1054 \u1041 \u1045 \u1048 \u1061  \u1057 \u1058 \u1054 \u1056 \u1054 \u1053 \
+    const sideAval = document.getElementById('attach-b').value.split('|')[0];\
+    const sideBval = document.getElementById('attach-a').value.split('|')[0];\
+    \
+    const isBothSidesPlain = \
+        (sideAval.startsWith('thread-') || sideAval === 'none' || sideAval === '') && \
+        (sideBval.startsWith('thread-') || sideBval === 'none' || sideBval === '');\
+    \
+    // \uc0\u1045 \u1057 \u1051 \u1048  \u1057  \u1054 \u1041 \u1045 \u1048 \u1061  \u1057 \u1058 \u1054 \u1056 \u1054 \u1053  \u1056 \u1045 \u1047 \u1068 \u1041 \u1040 , \u1057 \u1058 \u1040 \u1042 \u1048 \u1052  \u1055 \u1056 \u1054 \u1063 \u1045 \u1056 \u1050 \
+    if (isBothSidesPlain) \{\
+        l1 = '\'97 (\uc0\u1073 \u1077 \u1079  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1086 \u1074 )';\
+    \}\
+    \
+    const connType = document.getElementById('connection').value === 'threaded' ? '\uc0\u1056 \u1077 \u1079 \u1100 \u1073 \u1086 \u1074 \u1086 \u1077 ' : '\u1057 \u1074 \u1072 \u1088 \u1085 \u1086 \u1077 ';\
+    \
+    // \uc0\u1055 \u1086 \u1083 \u1091 \u1095 \u1072 \u1077 \u1084  \u1085 \u1072 \u1079 \u1074 \u1072 \u1085 \u1080 \u1103  \u1085 \u1072 \u1082 \u1086 \u1085 \u1077 \u1095 \u1085 \u1080 \u1082 \u1086 \u1074 \
+    let nameRod = "\uc0\u1057 \u1074 \u1072 \u1088 \u1085 \u1072 \u1103  \u1087 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072 "; // \u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B (\u1064 \u1090 \u1086 \u1082 )\
+    let nameTube = "\uc0\u1057 \u1074 \u1072 \u1088 \u1085 \u1072 \u1103  \u1087 \u1088 \u1086 \u1091 \u1096 \u1080 \u1085 \u1072 "; // \u1057 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  \u1040  (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 )\
+\
+    if (document.getElementById('connection').value === 'threaded') \{\
+        // \uc0\u1042 \u1040 \u1046 \u1053 \u1054 : \u1042  \u1074 \u1072 \u1096 \u1077 \u1084  HTML attach-a \u1101 \u1090 \u1086  \u1064 \u1090 \u1086 \u1082  (Side B), attach-b \u1101 \u1090 \u1086  \u1058 \u1088 \u1091 \u1073 \u1082 \u1072  (Side A)\
+        const selRod = document.getElementById('attach-a'); \
+        const selTube = document.getElementById('attach-b');\
+        \
+        nameRod = selRod.options[selRod.selectedIndex].text;\
+        nameTube = selTube.options[selTube.selectedIndex].text;\
+    \}\
+\
+    // 3. \uc0\u1047 \u1072 \u1087 \u1086 \u1083 \u1085 \u1103 \u1077 \u1084  \u1096 \u1072 \u1073 \u1083 \u1086 \u1085 \
+    document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('ru-RU');\
+    document.getElementById('pdf-article').innerText = article;\
+    document.getElementById('pdf-series').innerText = series;\
+    document.getElementById('pdf-dims').innerText = dimsText;\
+    document.getElementById('pdf-force').innerText = force;\
+    document.getElementById('pdf-l1').innerText = l1;\
+    document.getElementById('pdf-conn').innerText = connType;\
+\
+    // --- \uc0\u1047 \u1040 \u1055 \u1054 \u1051 \u1053 \u1071 \u1045 \u1052  \u1050 \u1054 \u1051 \u1054 \u1053 \u1050 \u1048  (\u1058 \u1045 \u1055 \u1045 \u1056 \u1068  \u1055 \u1056 \u1040 \u1042 \u1048 \u1051 \u1068 \u1053 \u1067 \u1049  \u1055 \u1054 \u1056 \u1071 \u1044 \u1054 \u1050 ) ---\
+    \
+    // \uc0\u1051 \u1077 \u1074 \u1072 \u1103  \u1082 \u1086 \u1083 \u1086 \u1085 \u1082 \u1072  PDF (\u1064 \u1090 \u1086 \u1082 ) -> \u1041 \u1077 \u1088 \u1077 \u1084  \u1076 \u1072 \u1085 \u1085 \u1099 \u1077  \u1080 \u1079  'a' (\u1074 \u1072 \u1096 \u1072  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  B)\
+    document.getElementById('pdf-name-rod').innerText = nameRod;\
+    document.getElementById('pdf-img-rod').src = document.getElementById('img-a').src;\
+\
+    // \uc0\u1055 \u1088 \u1072 \u1074 \u1072 \u1103  \u1082 \u1086 \u1083 \u1086 \u1085 \u1082 \u1072  PDF (\u1058 \u1088 \u1091 \u1073 \u1082 \u1072 ) -> \u1041 \u1077 \u1088 \u1077 \u1084  \u1076 \u1072 \u1085 \u1085 \u1099 \u1077  \u1080 \u1079  'b' (\u1074 \u1072 \u1096 \u1072  \u1089 \u1090 \u1086 \u1088 \u1086 \u1085 \u1072  A)\
+    document.getElementById('pdf-name-tube').innerText = nameTube;\
+    document.getElementById('pdf-img-tube').src = document.getElementById('img-b').src;\
+    \
+    // \uc0\u1054 \u1089 \u1085 \u1086 \u1074 \u1085 \u1072 \u1103  \u1082 \u1072 \u1088 \u1090 \u1080 \u1085 \u1082 \u1072 \
+    document.getElementById('pdf-main-img').src = document.getElementById('img-spring').src;\
+\
+\
+    // 4. \uc0\u1043 \u1077 \u1085 \u1077 \u1088 \u1080 \u1088 \u1091 \u1077 \u1084  PDF\
+    const \{ jsPDF \} = window.jspdf;\
+    const element = document.getElementById('pdf-template');\
+    \
+    const btn = event.target; // \uc0\u1050 \u1085 \u1086 \u1087 \u1082 \u1072 , \u1085 \u1072  \u1082 \u1086 \u1090 \u1086 \u1088 \u1091 \u1102  \u1085 \u1072 \u1078 \u1072 \u1083 \u1080 \
+    const oldText = btn.innerText;\
+    btn.innerText = "\uc0\u1043 \u1045 \u1053 \u1045 \u1056 \u1040 \u1062 \u1048 \u1071 ...";\
+    btn.disabled = true;\
+\
+    try \{\
+        const canvas = await html2canvas(element, \{\
+            scale: 2,\
+            useCORS: true,\
+            logging: false,\
+            allowTaint: false\
+        \});\
+\
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);\
+        const pdf = new jsPDF('p', 'mm', 'a4');\
+        const pdfWidth = pdf.internal.pageSize.getWidth();\
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;\
+\
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);\
+        pdf.save(`Dikon_GasSpring_$\{article.replace(/\\//g, '-')\}.pdf`);\
+        \
+    \} catch (err) \{\
+        console.error("\uc0\u1054 \u1096 \u1080 \u1073 \u1082 \u1072  PDF:", err);\
+        alert("\uc0\u1053 \u1077  \u1091 \u1076 \u1072 \u1083 \u1086 \u1089 \u1100  \u1089 \u1086 \u1079 \u1076 \u1072 \u1090 \u1100  PDF. \u1055 \u1086 \u1078 \u1072 \u1083 \u1091 \u1081 \u1089 \u1090 \u1072 , \u1087 \u1086 \u1087 \u1088 \u1086 \u1073 \u1091 \u1081 \u1090 \u1077  \u1077 \u1097 \u1077  \u1088 \u1072 \u1079 .");\
+    \} finally \{\
+        btn.innerText = oldText;\
+        btn.disabled = false;\
+    \}\
+\}\
+</script>\
+\
+</body>\
+</html>}

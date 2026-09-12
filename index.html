@@ -1,0 +1,2839 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Дикон — Цифровой каталог и конфигуратор газовых пружин SUSPA</title>
+  <meta name="description" content="Интерактивный конфигуратор газовых пружин SUSPA, подбор артикула, скачивание чертежей и спецификаций в PDF, каталог продукции Dikon.">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Библиотеки для PDF и QR: локально с фолбэком на CDN -->
+  <script src="./vendor/html2canvas.min.js"></script>
+  <script src="./vendor/jspdf.umd.min.js"></script>
+  <script src="./vendor/qrcode.min.js"></script>
+  <script>
+    if (typeof html2canvas === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>');
+    }
+    if (typeof jspdf === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>');
+    }
+    if (typeof QRCode === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>');
+    }
+  </script>
+
+  <style>
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #eef3f7;
+  color: #243447;
+  font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+.modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+.btn-confirm { background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: background 0.2s; }
+.btn-confirm:hover { background: #219150; }
+
+}
+
+/* =========================================================
+   Цифровой стенд Dikon — CSS как в конфигураторе
+   Цвета бренда: --brand-blue / --brand-dark
+   ========================================================= */
+
+:root {
+  --brand-blue: #29abe2;
+  --brand-dark: #1b2a3a;
+  --brand-ink: #243447;
+  --bg: #eef3f7;
+  --card: #ffffff;
+  --muted: #5b6b7c;
+  --line: #d7e2ea;
+  --danger: #c0392b;
+  --ok: #1f8a4c;
+  --radius: 12px;
+  --shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  --header-h: 64px;
+  --tabbar-h: 68px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--brand-ink);
+  font-family: "Manrope", -apple-system, system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  padding: 0;
+}
+
+#dikon-app {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 860px) {
+  #dikon-app {
+    padding-bottom: 0;
+  }
+}
+
+/* ---------- HEADER ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--header-h);
+  padding: 8px 12px;
+  background: #fff;
+  border-bottom: 3px solid var(--brand-blue);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.logo-word {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: var(--brand-dark);
+  line-height: 1;
+}
+
+.logo-word span {
+  color: var(--brand-blue);
+}
+
+.logo-sub {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.header-nav {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  min-width: 0;
+}
+
+@media (min-width: 860px) {
+  .header-nav {
+    display: flex;
+  }
+}
+
+.nav-btn {
+  border: 0;
+  background: transparent;
+  color: var(--brand-ink);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.nav-btn:hover,
+.nav-btn.is-active {
+  background: #e7f6fc;
+  color: #178ab8;
+}
+
+.header-cta {
+  display: none;
+  background: var(--brand-blue);
+  color: #fff;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (min-width: 860px) {
+  .header-cta {
+    display: inline-flex;
+  }
+}
+
+.header-cta:hover {
+  background: #229acb;
+}
+
+/* ---------- PAGES ---------- */
+.page {
+  display: none;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 14px 28px;
+}
+
+.page.active {
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--brand-dark);
+  margin: 0 0 10px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.header-line {
+  border-bottom: 3px solid var(--brand-blue);
+  margin-bottom: 18px;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+/* ---------- CARDS / GRID ---------- */
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  background: var(--brand-dark);
+  color: #fff;
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 18px;
+  display: grid;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -50px;
+  width: 180px;
+  height: 180px;
+  border: 18px solid rgba(41, 171, 226, 0.25);
+  border-radius: 50%;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hero p {
+  margin: 0;
+  color: #c9d6e2;
+  font-size: 14px;
+  line-height: 1.45;
+  max-width: 36em;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .catalog-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 980px) {
+  .catalog-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.cat-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  text-align: left;
+  padding: 0;
+  box-shadow: var(--shadow);
+  color: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.cat-card:hover {
+  border-color: var(--brand-blue);
+  transform: translateY(-2px);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.cat-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #f7fafc;
+  display: block;
+}
+
+.cat-card .body {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.cat-card h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.cat-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.cat-card .go {
+  margin-top: auto;
+  color: var(--brand-blue);
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn {
+  border: none;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.btn-save,
+.btn-primary {
+  background: var(--brand-blue);
+  color: #fff;
+}
+
+.btn-save:hover,
+.btn-primary:hover {
+  background: #229acb;
+}
+
+.btn-save:disabled,
+.btn-primary:disabled {
+  background: #ccc;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-reset,
+.btn-ghost {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-reset:hover,
+.btn-ghost:hover {
+  background: #d0d0d0;
+}
+
+.btn-ok {
+  background: var(--ok);
+  color: #fff;
+}
+
+.btn-call {
+  background: var(--brand-dark);
+  color: #fff;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 800px) {
+  .footer-buttons {
+    flex-direction: column;
+  }
+  .footer-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- FORMS ---------- */
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 800;
+  font-size: 12px;
+  color: #555;
+  text-transform: uppercase;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d8e0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 15px;
+  background: #fff;
+  margin-bottom: 10px;
+  font-family: inherit;
+  color: var(--brand-ink);
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+input.error {
+  border-color: #e74c3c !important;
+  background: #fff5f5;
+  color: #e74c3c;
+}
+
+.limit-hint {
+  font-size: 11px;
+  color: #7f8c8d;
+  margin-top: -5px;
+  display: block;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- CONFIGURATOR ---------- */
+.config-grid {
+  display: grid;
+  grid-template-areas:
+    "sideA visual sideB"
+    ". params ."
+    ". results .";
+  grid-template-columns: 240px 1fr 240px;
+  gap: 20px;
+  align-items: start;
+}
+
+.side-a {
+  grid-area: sideA;
+}
+.side-b {
+  grid-area: sideB;
+}
+.center-params {
+  grid-area: params;
+  margin-top: 15px;
+}
+.center-visual {
+  grid-area: visual;
+  margin-top: 35px;
+}
+.center-results {
+  grid-area: results;
+}
+
+.side-a > label {
+  margin-top: 1px;
+  margin-bottom: -100px;
+  position: relative;
+}
+
+.side-b > label {
+  margin-top: 1px;
+  margin-bottom: -1px;
+  position: relative;
+}
+
+.side-a .tip-box {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  top: 119px;
+}
+
+.side-b .tip-box {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  top: 20px;
+}
+
+.params-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 120px;
+  gap: 15px;
+  background: #fdfdfd;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #efefef;
+}
+
+.visual-area {
+  text-align: center;
+  padding: 15px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.spring-drawing {
+  max-width: 100%;
+  height: auto;
+  max-height: 180px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.spring-drawing:hover {
+  transform: scale(1.02);
+}
+
+.main-zoom-hint {
+  font-size: 11px;
+  color: var(--brand-blue);
+  font-weight: bold;
+  margin-bottom: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.zoom-hint {
+  font-size: 10px;
+  color: var(--brand-blue);
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.tip-box {
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tip-box.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.tip-img {
+  width: 140px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 5px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+
+.order-code-value {
+  background: var(--brand-blue);
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #1e8bc2;
+  word-break: break-all;
+  box-shadow: 0 4px 10px rgba(41, 171, 226, 0.2);
+}
+
+.result-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 800px) {
+  .config-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "params"
+      "visual"
+      "sideA"
+      "sideB"
+      "results";
+    gap: 10px;
+  }
+  .params-row {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  .tip-box {
+    min-height: auto;
+    padding: 10px;
+  }
+  .tip-img {
+    width: 120px;
+    height: 80px;
+  }
+  .side-a > label,
+  .side-b > label {
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+  .side-a .tip-box,
+  .side-b .tip-box {
+    top: 0;
+  }
+}
+
+/* ---------- TABLES / SPECS ---------- */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+}
+
+.spec-table th,
+.spec-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.spec-table th {
+  background: #eef6fa;
+  color: var(--brand-dark);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.spec-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.checks {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.checks li::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--brand-blue)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' d='M3 8.5 6.5 12 13 4'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+}
+
+.page-img {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  display: block;
+  cursor: pointer;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.two-col {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 800px) {
+  .two-col {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 16px;
+}
+
+.chip {
+  background: #e7f6fc;
+  color: #178ab8;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 0;
+}
+
+.product-list {
+  display: grid;
+  gap: 10px;
+}
+
+.product-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.product-item strong {
+  display: block;
+  font-size: 14px;
+}
+
+.product-item span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dot {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  background: #eef6fa;
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- CONTACTS / QR / LEADS ---------- */
+.office-grid {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .office-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.office {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.office h3 {
+  margin-bottom: 8px;
+}
+
+.office a {
+  color: var(--brand-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.office p {
+  margin: 6px 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.qr-wrap {
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+#qr-box {
+  display: inline-flex;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 8px 0 12px;
+}
+
+#qr-url {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.poster {
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  padding: 24px 16px;
+  margin-top: 16px;
+  background: #fff;
+}
+
+.leads-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lead-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.lead-item .meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 24px 8px;
+}
+
+/* ---------- MODAL / TOAST ---------- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 95%;
+  width: 640px;
+  text-align: center;
+  position: relative;
+}
+
+.detail-img {
+  max-width: 100%;
+  max-height: 70vh;
+  margin-bottom: 15px;
+  object-fit: contain;
+}
+
+.btn-confirm {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--tabbar-h) + 16px);
+  transform: translateX(-50%) translateY(20px);
+  background: var(--brand-dark);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1100;
+  max-width: calc(100% - 24px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (min-width: 860px) {
+  .toast {
+    bottom: 24px;
+  }
+}
+
+/* ---------- TAB BAR (mobile) ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: #fff;
+  border-top: 1px solid var(--line);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 860px) {
+  .tabbar {
+    display: none;
+  }
+}
+
+.tab {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 2px;
+  min-height: 44px;
+}
+
+.tab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tab.is-active {
+  color: var(--brand-blue);
+}
+
+/* Hidden PDF template */
+#pdf-template {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 790px;
+  background: white;
+  padding: 40px;
+  font-family: sans-serif;
+  color: #333;
+}
+
+@media print {
+  .site-header,
+  .tabbar,
+  .toast,
+  .footer-buttons,
+  .no-print {
+    display: none !important;
+  }
+  #dikon-app {
+    padding: 0;
+  }
+  .page {
+    display: none !important;
+  }
+  #page-qr.page.active {
+    display: block !important;
+  }
+}
+  </style>
+</head>
+<body>
+<div id="dikon-app">
+      <header class="site-header">
+        <button type="button" class="logo" data-page="home" aria-label="Dikon на главную">
+          <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+          <span>
+            <span class="logo-word">
+              Дик<span>о</span>н
+            </span>
+            <span class="logo-sub">цифровой каталог</span>
+          </span>
+        </button>
+        <nav class="header-nav" aria-label="Разделы">
+          <button type="button" class="nav-btn" data-page="home">
+            Каталог
+          </button>
+          <button type="button" class="nav-btn" data-page="config">
+            Конфигуратор
+          </button>
+          <button type="button" class="nav-btn" data-page="lead">
+            Заявка
+          </button>
+          <button type="button" class="nav-btn" data-page="qr">
+            QR
+          </button>
+          <button type="button" class="nav-btn" data-page="contacts">
+            Контакты
+          </button>
+        </nav>
+        <button type="button" class="header-cta" data-page="lead">
+          Заявка
+        </button>
+      </header>
+
+      <!-- ===== ГЛАВНАЯ ===== -->
+      <section id="page-home" class="page active">
+        <div class="hero">
+          <h1>Каталог Dikon на телефоне</h1>
+          <p>
+            Газовые пружины SUSPA, системы регулировки высоты, гидроприводы для медицины и
+            колёса. Наведите камеру на QR — откроется этот каталог.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="btn btn-primary" data-page="config">
+              Конфигуратор пружин
+            </button>
+            <a class="btn btn-ghost" href="./catalog.pdf" download>
+              Скачать PDF
+            </a>
+            <button type="button" class="btn btn-call" data-page="qr">
+              QR для стенда
+            </button>
+          </div>
+        </div>
+        <div class="catalog-grid">
+          <button type="button" class="cat-card" data-page="springs">
+            <img src="./img/cards/springs.jpg" alt="Газовая пружина SUSPA" />
+            <div class="body">
+              <h3>Газовые пружины</h3>
+              <p>5 серий, 40–2000 N, до 50 000 циклов. Подбор артикула в конфигураторе.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+          <button type="button" class="cat-card" data-page="lockable">
+            <img src="./img/cards/lockable.jpg" alt="Блокируемая газовая пружина" />
+            <div class="body">
+              <h3>Блокируемые пружины</h3>
+              <p>Varilock и VOB — фиксация штока в любом промежуточном положении.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+          <button type="button" class="cat-card" data-page="movotec">
+            <img src="./img/cards/movotec.jpg" alt="Система Movotec" />
+            <div class="body">
+              <h3>Movotec</h3>
+              <p>Гидравлическая регулировка высоты стола и оборудования. До 454 кг.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+          <button type="button" class="cat-card" data-page="varistand">
+            <img src="./img/cards/varistand.jpg" alt="Колонна Varistand" />
+            <div class="body">
+              <h3>Varistand / Varibase</h3>
+              <p>Пневматическая регулировка высоты одной ногой. Хром или чёрный.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+          <button type="button" class="cat-card" data-page="medical">
+            <img src="./img/cards/medical.jpg" alt="Гидропривод для медицины" />
+            <div class="body">
+              <h3>Гидроприводы</h3>
+              <p>Для кроватей, кушеток, носилок, капельниц и инструментальных столиков.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+          <button type="button" class="cat-card" data-page="wheels">
+            <img src="./img/cards/wheels.jpg" alt="Колёса и опоры" />
+            <div class="body">
+              <h3>Колёса и опоры</h3>
+              <p>Мебельные, медицинские, транспортные, термостойкие и большегрузные.</p>
+              <span class="go">Открыть раздел</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== ГАЗОВЫЕ ПРУЖИНЫ ===== -->
+      <section id="page-springs" class="page">
+        <h2>Газовые пружины SUSPA</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Стандартная программа — 5 серий. Отличаются диаметрами трубки и штока и диапазоном
+          силы F1. Не нуждаются в уходе, рассчитаны не менее чем на 50 000 циклов.
+        </p>
+        <div class="chip-row">
+          <button type="button" class="chip" data-page="config">
+            Собрать артикул
+          </button>
+          <span class="chip">Изготовление по ТУ заказчика</span>
+        </div>
+        <div class="stack">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Серия</th>
+                <th>Ø трубки</th>
+                <th>Ø штока</th>
+                <th>F1, N</th>
+                <th>Макс. ход</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>16-12</td>
+                <td>12 мм</td>
+                <td>4 мм</td>
+                <td>40–180</td>
+                <td>150 мм</td>
+              </tr>
+              <tr>
+                <td>16-1</td>
+                <td>15 мм</td>
+                <td>6 мм</td>
+                <td>50–400</td>
+                <td>150 мм</td>
+              </tr>
+              <tr>
+                <td>16-2</td>
+                <td>18 мм</td>
+                <td>8 мм</td>
+                <td>80–750</td>
+                <td>250 мм</td>
+              </tr>
+              <tr>
+                <td>16-4</td>
+                <td>22 мм</td>
+                <td>10 мм</td>
+                <td>100–1200</td>
+                <td>400 мм</td>
+              </tr>
+              <tr>
+                <td>16-6</td>
+                <td>28 мм</td>
+                <td>14 мм</td>
+                <td>200–2000</td>
+                <td>500 мм</td>
+              </tr>
+            </tbody>
+          </table>
+          <img
+            class="page-img"
+            src="./img/pages/page-2.jpg"
+            alt="Страница каталога: газовые пружины"
+            data-open-img="./img/pages/page-2.jpg"
+            data-open-title="Газовые пружины"
+          />
+        </div>
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="config">
+            Открыть конфигуратор
+          </button>
+          <button type="button" class="btn btn-ghost" data-page="lead">
+            Заявка на расчёт
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== КОНФИГУРАТОР ===== -->
+      <section id="page-config" class="page">
+        <h2>Конфигуратор газовых пружин Dikon</h2>
+        <div class="header-line"></div>
+        <div class="config-grid">
+          <div class="center-params">
+            <div class="params-row">
+              <div>
+                <label for="series">1. Серия:</label>
+                <select id="series">
+                  <option value="16-1">
+                    16-1 (Ø трубки 15 мм, Ø штока 6 мм, макс. ход 150 мм, 50–400N)
+                  </option>
+                  <option value="16-2">
+                    16-2 (Ø трубки 18.5 мм, Ø штока 8 мм, макс. ход 250 мм, 80–750N)
+                  </option>
+                  <option value="16-4">
+                    16-4 (Ø трубки 22 мм, Ø штока 10 мм, макс. ход 495 мм, 100–1200N)
+                  </option>
+                  <option value="16-6">
+                    16-6 (Ø трубки 28 мм, Ø штока 14 мм, макс. ход 500 мм, 200–2000N)
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label for="dimensions-select">2. Длина и ход:</label>
+                <select id="dimensions-select"></select>
+              </div>
+              <div>
+                <label for="connection">3. Соединение:</label>
+                <select id="connection">
+                  <option value="threaded">Резьбовое</option>
+                  <option id="welded-opt" value="welded">
+                    Сварное
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label for="force">4. Усилие (Н):</label>
+                <input id="force" type="number" placeholder="250" step="10" />
+                <span id="force-limits" class="limit-hint">
+                  min --H - max --H
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="center-visual">
+            <div class="visual-area">
+              <div class="main-zoom-hint" onclick="window.openMainDrawing()">
+                🔍 НАЖМИТЕ ДЛЯ УВЕЛИЧЕНИЯ
+              </div>
+              <img
+                id="img-spring"
+                src="./img/springs/16-1-threaded.png"
+                class="spring-drawing"
+                onclick="window.openMainDrawing()"
+                title="Нажмите, чтобы приблизить"
+                alt="Чертёж пружины"
+              />
+            </div>
+          </div>
+
+          <div class="side-a">
+            <label>Сторона B (Шток):</label>
+            <div class="tip-box" id="box-a">
+              <div class="zoom-hint" onclick="window.openDetail("a")">
+                🔍 ПОКАЗАТЬ ЧЕРТЁЖ
+              </div>
+              <img
+                id="img-a"
+                src="./img/tips/none.png"
+                class="tip-img"
+                onclick="window.openDetail("a")"
+                alt="Наконечник стороны B"
+              />
+              <select id="attach-a"></select>
+            </div>
+          </div>
+
+          <div class="side-b">
+            <label>Сторона А (Трубка):</label>
+            <div class="tip-box" id="box-b">
+              <div class="zoom-hint" onclick="window.openDetail("b")">
+                🔍 ПОКАЗАТЬ ЧЕРТЁЖ
+              </div>
+              <img
+                id="img-b"
+                src="./img/tips/none.png"
+                class="tip-img"
+                onclick="window.openDetail("b")"
+                alt="Наконечник стороны A"
+              />
+              <select id="attach-b"></select>
+            </div>
+          </div>
+
+          <div class="center-results">
+            <div class="result-panel">
+              <div id="calc-result" style="font-size: 18px; font-weight: 800px; text-align: center">
+                L1: -- мм
+              </div>
+              <div id="spec-info" style="font-size: 12px; color: #718096; text-align: center" />
+              <label style="text-align: center; margin-top: 10px">Артикул для заказа:</label>
+              <div id="order-code" class="order-code-value">
+                ---
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-buttons">
+          <button id="save-btn" class="btn btn-save" type="button" onclick="window.copyArticle()">
+            СКОПИРОВАТЬ АРТИКУЛ
+          </button>
+          <button id="pdf-btn" type="button" class="btn btn-reset" onclick="window.downloadPDF()">
+            СКАЧАТЬ PDF
+          </button>
+          <button type="button" class="btn btn-primary" onclick="window.addToRequest()">
+            ОТПРАВИТЬ В ЗАЯВКУ
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== БЛОКИРУЕМЫЕ ===== -->
+      <section id="page-lockable" class="page">
+        <h2>Блокируемые газовые пружины</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Фиксация в любом промежуточном положении штока. Varilock — включение на штоке, VOB —
+          включение на трубке.
+        </p>
+        <div class="two-col">
+          <div class="stack">
+            <table class="spec-table">
+              <thead>
+                <tr>
+                  <th>Параметр</th>
+                  <th>Значение</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Ø трубки</td>
+                  <td>22 мм / 28 мм</td>
+                </tr>
+                <tr>
+                  <td>Ø штока</td>
+                  <td>10 мм</td>
+                </tr>
+                <tr>
+                  <td>Ход штока</td>
+                  <td>10–400 мм</td>
+                </tr>
+                <tr>
+                  <td>F1</td>
+                  <td>до 1000 N</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="lead">
+              Для отключения блокировки: трос Боудена, кнопки, отключающий рычаг. Прямое и
+              дистанционное управление.
+            </p>
+          </div>
+          <img
+            class="page-img"
+            src="./img/pages/page-3.jpg"
+            alt="Страница каталога: блокируемые пружины"
+            data-open-img="./img/pages/page-3.jpg"
+            data-open-title="Блокируемые газовые пружины"
+          />
+        </div>
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="lead" data-product="lockable">
+            Заявка на Lockline
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== MOVOTEC ===== -->
+      <section id="page-movotec" class="page">
+        <h2>Movotec — гидравлическая регулировка высоты</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Для промышленного, офисного и медицинского оборудования. Активация рукояткой или
+          редукторным электродвигателем.
+        </p>
+        <ul class="checks">
+          <li>Элегантный дизайн и бесшумная работа</li>
+          <li>Блокировка в любой позиции</li>
+          <li>Постоянная сила независимо от позиции</li>
+          <li>Проще и дешевле, чем Moveline</li>
+        </ul>
+        <div class="two-col">
+          <table class="spec-table">
+            <tbody>
+              <tr>
+                <td>Ход поршня</td>
+                <td>155, 195, 300, 400 мм</td>
+              </tr>
+              <tr>
+                <td>Длина в сжатом состоянии</td>
+                <td>711 мм</td>
+              </tr>
+              <tr>
+                <td>Длина в выдвинутом состоянии</td>
+                <td>до 1111 мм</td>
+              </tr>
+              <tr>
+                <td>Максимальная нагрузка</td>
+                <td>до 454 кг</td>
+              </tr>
+              <tr>
+                <td>Длина цилиндра A</td>
+                <td>258,5–463,5 мм</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="card">
+            <strong>В комплект входят</strong>
+            <p class="lead" style="margin-top: 8px">
+              Ручной или электрический привод, четыре подъемных цилиндра, четыре угловых
+              элемента (ножки), две трубки 2,5 м и две трубки 3,0 м.
+            </p>
+            <img
+              class="page-img"
+              src="./img/pages/page-4.jpg"
+              alt="Страница каталога Movotec"
+              data-open-img="./img/pages/page-4.jpg"
+              data-open-title="Movotec"
+            />
+          </div>
+        </div>
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="lead" data-product="movotec">
+            Заявка на Movotec
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== VARISTAND ===== -->
+      <section id="page-varistand" class="page">
+        <h2>Varistand / Varibase</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Пневматическая система SUSPA для регулировки высоты стола одной ногой. Кнопка или
+          рычаг. Varistand — хром или чёрный.
+        </p>
+        <ul class="checks">
+          <li>Бесшумная работа и элегантный вид</li>
+          <li>Блокировка в любой позиции</li>
+          <li>OverRide — подъём без отдельной активации</li>
+        </ul>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Параметр</th>
+              <th>Varistand</th>
+              <th>Varibase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ход штока max</td>
+              <td>415 мм</td>
+              <td>400 мм</td>
+            </tr>
+            <tr>
+              <td>Длина сжатия min</td>
+              <td>435 мм</td>
+              <td>440 мм</td>
+            </tr>
+            <tr>
+              <td>Длина выдвижения max</td>
+              <td>1040 мм</td>
+              <td>1040 мм</td>
+            </tr>
+            <tr>
+              <td>Усилие</td>
+              <td>120 N</td>
+              <td>120 N</td>
+            </tr>
+            <tr>
+              <td>Крепление к столешнице</td>
+              <td>Фланцевый адаптер</td>
+              <td>Фланцевый адаптер</td>
+            </tr>
+            <tr>
+              <td>Крепление к пятилучию</td>
+              <td>Фланец 3×M6</td>
+              <td>Фланец 4×M6</td>
+            </tr>
+          </tbody>
+        </table>
+        <img
+          class="page-img"
+          src="./img/pages/page-5.jpg"
+          alt="Страница каталога Varistand"
+          data-open-img="./img/pages/page-5.jpg"
+          data-open-title="Varistand / Varibase"
+          style="margin-top: 16px"
+        />
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="lead" data-product="varistand">
+            Заявка на Varistand
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== МЕДИЦИНА ===== -->
+      <section id="page-medical" class="page">
+        <h2>Гидроприводы для медицинской мебели</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Для больничных кроватей, массажных кушеток, носилок, косметического и медицинского
+          оборудования.
+        </p>
+        <div class="product-list">
+          <div class="product-item">
+            <div class="dot">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+            </div>
+            <div>
+              <strong>Гидропривод общего назначения</strong>
+              <span>Медицинские кровати и оборудование</span>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="dot">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+            </div>
+            <div>
+              <strong>Гидропривод для капельницы</strong>
+              <span>Стойки и мобильные штативы</span>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="dot">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+            </div>
+            <div>
+              <strong>Инструментальные столики</strong>
+              <span>Плавный подъём рабочей поверхности</span>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="dot">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+            </div>
+            <div>
+              <strong>Подъём спального места</strong>
+              <span>Медицинские кровати</span>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="dot">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+            </div>
+            <div>
+              <strong>Подъёмник для носилок</strong>
+              <span>Носилки и медицинские кровати</span>
+            </div>
+          </div>
+        </div>
+        <img
+          class="page-img"
+          src="./img/pages/page-6.jpg"
+          alt="Страница каталога: гидроприводы"
+          data-open-img="./img/pages/page-6.jpg"
+          data-open-title="Гидроприводы"
+          style="margin-top: 16px"
+        />
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="lead" data-product="medical">
+            Заявка на гидропривод
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== КОЛЁСА ===== -->
+      <section id="page-wheels" class="page">
+        <h2>Колёса и колёсные опоры</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Италия, Германия, Турция и Китай. Для оборудования, медицинской мебели и аппаратуры.
+        </p>
+        <div class="catalog-grid">
+          <div class="card">
+            <h3>Мебельная серия</h3>
+            <p class="lead">Для корпусной и офисной мебели</p>
+          </div>
+          <div class="card">
+            <h3>Аппаратная и медицинская</h3>
+            <p class="lead">Тихий ход, гигиеничные материалы</p>
+          </div>
+          <div class="card">
+            <h3>Транспортная серия</h3>
+            <p class="lead">Складская техника и тележки</p>
+          </div>
+          <div class="card">
+            <h3>Термостойкая серия</h3>
+            <p class="lead">Печи, камеры, горячие цеха</p>
+          </div>
+          <div class="card">
+            <h3>Большегрузная серия</h3>
+            <p class="lead">Высокая нагрузка на опору</p>
+          </div>
+          <div class="card">
+            <h3>Пневматическая серия</h3>
+            <p class="lead">Неровный пол и улица</p>
+          </div>
+        </div>
+        <img
+          class="page-img"
+          src="./img/pages/page-7.jpg"
+          alt="Страница каталога: колёса"
+          data-open-img="./img/pages/page-7.jpg"
+          data-open-title="Колёса и опоры"
+          style="margin-top: 16px"
+        />
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" data-page="lead" data-product="wheels">
+            Заявка на колёса
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== КОНТАКТЫ ===== -->
+      <section id="page-contacts" class="page">
+        <h2>Контакты</h2>
+        <div class="header-line"></div>
+        <div class="office-grid">
+          <div class="office">
+            <h3>Офис в Москве</h3>
+            <p>
+              141044, городской округ Мытищи, д. Грибки, ул. Ангарская, стр. 40Б, пом. № 8-12
+            </p>
+            <p>
+              <a href="tel:+78007071524">+7 800 707-15-24</a>
+            </p>
+            <p>
+              <a href="tel:+79255050444">+7 925 505-04-44</a>
+            </p>
+            <p>
+              <a href="mailto:moscow@dikon.ru">moscow@dikon.ru</a>
+            </p>
+            <p>
+              <a href="https://wa.me/79255050444" target="_blank" rel="noreferrer">
+                WhatsApp Москва
+              </a>
+            </p>
+          </div>
+          <div class="office">
+            <h3>Офис в Санкт-Петербурге</h3>
+            <p>193318, ул. Ворошилова, д. 2, лит. АБ, пом. 5Н, офис 511 (БЦ «Охта»)</p>
+            <p>
+              <a href="tel:+78123150635">+7 812 315-06-35</a>
+            </p>
+            <p>
+              <a href="tel:+78125717310">+7 812 571-73-10</a>
+            </p>
+            <p>
+              <a href="tel:+78123145641">+7 812 314-56-41</a>
+            </p>
+            <p>
+              <a href="mailto:info@dikon.ru">info@dikon.ru</a>
+            </p>
+            <p>
+              <a href="https://wa.me/78123150635" target="_blank" rel="noreferrer">
+                WhatsApp Санкт-Петербург
+              </a>
+            </p>
+          </div>
+        </div>
+        <p class="lead" style="margin-top: 16px; text-align: center">
+          <a href="https://dikon.ru" target="_blank" rel="noreferrer">
+            www.dikon.ru
+          </a>
+        </p>
+        <img
+          class="page-img"
+          src="./img/pages/page-8.jpg"
+          alt="Контакты Dikon"
+          data-open-img="./img/pages/page-8.jpg"
+          data-open-title="Контакты"
+        />
+      </section>
+
+      <!-- ===== ЗАЯВКА ===== -->
+      <section id="page-lead" class="page">
+        <h2>Оставить заявку</h2>
+        <div class="header-line"></div>
+        <p class="lead">Имя и телефон — обязательны. Менеджер напишет в тот же день выставки.</p>
+        <form id="lead-form" class="card" onsubmit="return window.saveLeadFromForm(event)">
+          <label for="lead-name">Имя</label>
+          <input id="lead-name" name="name" autoComplete="name" required placeholder="Иван" />
+          <label for="lead-phone">Телефон</label>
+          <input id="lead-phone" name="phone" type="tel" autoComplete="tel" required placeholder="+7 9.." />
+          <label for="lead-company">Компания</label>
+          <input id="lead-company" name="company" placeholder="ООО «...»" />
+          <label for="lead-product">Что интересно</label>
+          <select id="lead-product" value="springs">
+            <option value="springs">Газовые пружины</option>
+            <option value="lockable">Блокируемые пружины</option>
+            <option value="movotec">Movotec</option>
+            <option value="varistand">Varistand / Varibase</option>
+            <option value="medical">Гидроприводы</option>
+            <option value="wheels">Колёса</option>
+            <option value="config">Конфигуратор / артикул</option>
+          </select>
+          <label for="lead-message">Комментарий</label>
+          <textarea id="lead-message" placeholder="Количество, срок, чертёж..." />
+          <div class="footer-buttons" style="border: 0px; margin-top: 8px; padding-top: 0px">
+            <button class="btn btn-save" type="submit">
+              Отправить заявку
+            </button>
+            <button type="button" class="btn btn-ghost" data-page="leads">
+              Журнал стенда
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ===== ЖУРНАЛ ЗАЯВОК ===== -->
+      <section id="page-leads" class="page">
+        <h2>
+          Заявки стенда · <span id="leads-count">0</span>
+        </h2>
+        <div class="header-line"></div>
+        <p class="lead">Хранятся только на этом телефоне / планшете. Выгрузите CSV в конце дня.</p>
+        <div id="leads-list" class="leads-list"></div>
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" onclick="window.exportLeads()">
+            Скачать CSV
+          </button>
+          <button type="button" class="btn btn-ghost" onclick="window.clearLeads()">
+            Очистить
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== QR ===== -->
+      <section id="page-qr" class="page">
+        <h2>QR-код для выставки</h2>
+        <div class="header-line"></div>
+        <p class="lead">
+          Распечатайте и повесьте у стойки, на визитках и на обложке бумажного каталога. Камера
+          телефона откроет этот каталог.
+        </p>
+        <div class="qr-wrap">
+          <div class="poster" id="qr-poster">
+            <div class="logo" style="justify-content: center; margin-bottom: 8px">
+              <svg class="logo-mark" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="#29abe2" stroke-width="3.5" />
+      <circle cx="18" cy="18" r="5.5" fill="#29abe2" />
+    </svg>
+              <span class="logo-word">
+                Дик<span>о</span>н
+              </span>
+            </div>
+            <p style="font-weight: 800px; margin: 0 0 8px">Наведите камеру — каталог на телефоне</p>
+            <div id="qr-box"></div>
+            <div id="qr-url"></div>
+            <p class="lead" style="margin-top: 8px">
+              SUSPA · газовые пружины · Movotec · колёса
+            </p>
+          </div>
+        </div>
+        <div class="footer-buttons">
+          <button type="button" class="btn btn-primary" onclick="window.downloadQR()">
+            Скачать PNG
+          </button>
+          <button type="button" class="btn btn-ghost" onClick={() => window.print()}>
+            Печать плаката
+          </button>
+        </div>
+      </section>
+
+      <nav class="tabbar" aria-label="Нижнее меню">
+        <button type="button" class="tab is-active" data-page="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10 12 4l8 6v10H4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Каталог
+        </button>
+        <button type="button" class="tab" data-page="config">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M5 12h14M5 17h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Конфиг
+        </button>
+        <button type="button" class="tab" data-page="lead">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v12H4zM4 10h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Заявка
+        </button>
+        <button type="button" class="tab" data-page="qr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          QR
+        </button>
+        <button type="button" class="tab" data-page="contacts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-8 8a8 8 0 0 1 16 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Контакты
+        </button>
+      </nav>
+
+      <!-- Скрытый шаблон PDF — как в вашем конфигураторе -->
+      <div id="pdf-template" aria-hidden="true">
+        <div
+          style="border-bottom: 3px solid #29abe2; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between"
+        >
+          <div>
+            <h1 style="margin: 0px; font-size: 24px; color: #2c3e50">Техническая спецификация</h1>
+            <p style="margin: 5px 0 0; color: #7f8c8d; font-size: 14px">
+              Конфигуратор газовых пружин Dikon
+            </p>
+          </div>
+          <div style="text-align: right; font-size: 12px; color: #999">
+            Дата: <span id="pdf-date"></span>
+          </div>
+        </div>
+        <div
+          style="background: #f0f7fa; border: 1px solid #29abe2; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px"
+        >
+          <div style="font-size: 14px; color: #555; margin-bottom: 5px">АРТИКУЛ ДЛЯ ЗАКАЗА:</div>
+          <div id="pdf-article" style="font-size: 28px; font-weight: 800px; color: #29abe2">
+            ---
+          </div>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px">
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd">Серия</td>
+              <td style="padding: 10px; border: 1px solid #ddd" id="pdf-series" />
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd">Размеры (L / Ход)</td>
+              <td style="padding: 10px; border: 1px solid #ddd" id="pdf-dims" />
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd">Усилие (F1)</td>
+              <td style="padding: 10px; border: 1px solid #ddd" id="pdf-force" />
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd">Межцентровое расстояние (L1)</td>
+              <td style="padding: 10px; border: 1px solid #ddd" id="pdf-l1" />
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd">Тип соединения</td>
+              <td style="padding: 10px; border: 1px solid #ddd" id="pdf-conn" />
+            </tr>
+          </tbody>
+        </table>
+        <h3>Схема пружины</h3>
+        <img id="pdf-main-img" alt="" style="max-width: 100%; max-height: 200px" />
+        <div style="display: flex; gap: 20px; margin-top: 20px">
+          <div style="width: 50%">
+            <h4>Сторона B (шток)</h4>
+            <img id="pdf-img-rod" alt="" style="max-height: 100px" />
+            <p id="pdf-name-rod" style="font-size: 12px" />
+          </div>
+          <div style="width: 50%">
+            <h4>Сторона A (трубка)</h4>
+            <img id="pdf-img-tube" alt="" style="max-height: 100px" />
+            <p id="pdf-name-tube" style="font-size: 12px" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="detailModal"
+        class="modal"
+        onclick="if(event.target===this)window.closeModal()"
+      >
+        <div class="modal-content">
+          <h3 id="modal-title" style="margin-top: 0px; color: #2c3e50">
+            Чертёж
+          </h3>
+          <img id="modal-img" class="detail-img" alt="Чертёж" />
+          <div id="modal-img-slot"></div>
+          <div class="modal-btns">
+            <button type="button" class="btn-confirm" onclick="window.closeModal()">
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="toast" class="toast"></div>
+    </div>
+
+<script>
+/* =========================================================
+   Цифровой стенд Dikon
+   Обычный JavaScript, как в вашем конфигураторе.
+   Функции конфигуратора сохранены: updateUI, calculateTotal,
+   validateForce, downloadPDF, fillAttach и те же данные.
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var LEADS_KEY = "dikon-exhibition-leads";
+  var currentPage = "home";
+
+  /* ---------- ДАННЫЕ КОНФИГУРАТОРА (ваш каталог) ---------- */
+  var springCatalog = {
+    threaded: {
+      "16-1": [
+        { l: 77.5, s: 20, t: 53.5, r: 24 },
+        { l: 107, s: 35, t: 67, r: 40 },
+        { l: 117.5, s: 40, t: 72.5, r: 45 },
+        { l: 156.5, s: 60, t: 91.5, r: 65 },
+        { l: 197, s: 80, t: 113, r: 84 },
+        { l: 207, s: 85, t: 117, r: 90 },
+        { l: 235, s: 100, t: 131, r: 104 },
+        { l: 278, s: 120, t: 154, r: 124 },
+        { l: 285, s: 120, t: 161, r: 124 },
+        { l: 316, s: 135, t: 168, r: 148 },
+        { l: 337.5, s: 150, t: 183.5, r: 154 },
+      ],
+      "16-2": [
+        { l: 128, s: 40, t: 78, r: 50 },
+        { l: 168, s: 57, t: 109, r: 59 },
+        { l: 206, s: 80, t: 121, r: 85 },
+        { l: 218, s: 85, t: 128, r: 90 },
+        { l: 248, s: 100, t: 138, r: 110 },
+        { l: 268, s: 105, t: 158, r: 110 },
+        { l: 288, s: 120, t: 163, r: 125 },
+        { l: 328, s: 140, t: 178, r: 150 },
+        { l: 367, s: 160, t: 203, r: 164 },
+        { l: 408, s: 180, t: 223, r: 185 },
+        { l: 453, s: 195, t: 253, r: 200 },
+        { l: 447.5, s: 200, t: 240, r: 207.5 },
+        { l: 489, s: 220, t: 264, r: 225 },
+        { l: 547.5, s: 250, t: 294, r: 253.5 },
+      ],
+      "16-4": [
+        { l: 248, s: 98, t: 148, r: 100 },
+        { l: 288, s: 120, t: 163, r: 125 },
+        { l: 348, s: 148, t: 198, r: 150 },
+        { l: 367, s: 150, t: 198, r: 169 },
+        { l: 406, s: 168, t: 236, r: 170 },
+        { l: 448, s: 198, t: 248, r: 200 },
+        { l: 548, s: 248, t: 298, r: 250 },
+        { l: 648, s: 295, t: 348, r: 300 },
+        { l: 748, s: 345, t: 398, r: 350 },
+        { l: 768, s: 345, t: 418, r: 350 },
+        { l: 848, s: 395, t: 448, r: 400 },
+        { l: 948, s: 445, t: 498, r: 450 },
+        { l: 1048, s: 495, t: 548, r: 500 },
+      ],
+      "16-6": [
+        { l: 218, s: 70, t: 118, r: 100 },
+        { l: 268, s: 98, t: 168, r: 100 },
+        { l: 368, s: 145, t: 218, r: 150 },
+        { l: 468, s: 198, t: 268, r: 200 },
+        { l: 568, s: 248, t: 318, r: 250 },
+        { l: 668, s: 298, t: 368, r: 300 },
+        { l: 768, s: 348, t: 418, r: 350 },
+        { l: 874, s: 398, t: 474, r: 400 },
+        { l: 963, s: 450, t: 508, r: 455 },
+        { l: 1070, s: 500, t: 565, r: 505 },
+      ],
+    },
+    welded: {
+      "16-1": [
+        { l: 106, s: 20, t: 57, r: 26, a: "A17", b: "B17" },
+        { l: 146, s: 40, t: 78, r: 45, a: "A17", b: "B17" },
+        { l: 160, s: 45, t: 86, r: 51, a: "A17", b: "B17" },
+        { l: 179, s: 55, t: 96, r: 60, a: "A17", b: "B17" },
+        { l: 186, s: 60, t: 96, r: 67, a: "A17", b: "B17" },
+        { l: 224, s: 80, t: 111, r: 90, a: "A17", b: "B17" },
+        { l: 264, s: 100, t: 131, r: 110, a: "A17", b: "B17" },
+        { l: 306, s: 110, t: 168, r: 115, a: "A17", b: "B17" },
+        { l: 305.5, s: 120, t: 157.5, r: 125, a: "A17", b: "B17" },
+        { l: 366, s: 150, t: 189, r: 154, a: "A17", b: "B17" },
+      ],
+      "16-2": [
+        { l: 206.5, s: 60, t: 108, r: 65, a: "A107", b: "B23" },
+        { l: 246.5, s: 80, t: 128, r: 85, a: "A107", b: "B23" },
+        { l: 256.5, s: 90, t: 128, r: 95, a: "A107", b: "B23" },
+        { l: 286.5, s: 100, t: 143, r: 110, a: "A107", b: "B23" },
+        { l: 316.5, s: 120, t: 158, r: 125, a: "A107", b: "B23" },
+        { l: 326.5, s: 120, t: 168, r: 125, a: "A107", b: "B23" },
+        { l: 354.5, s: 133, t: 183, r: 138, a: "A107", b: "B23" },
+        { l: 364.5, s: 140, t: 186, r: 145, a: "A107", b: "B23" },
+        { l: 407.5, s: 160, t: 201, r: 173, a: "A107", b: "B23" },
+        { l: 444, s: 178, t: 229.5, r: 181, a: "A107", b: "B23" },
+        { l: 485.5, s: 200, t: 240, r: 212, a: "A107", b: "B23" },
+        { l: 525.5, s: 220, t: 267, r: 225, a: "A107", b: "B23" },
+        { l: 586.5, s: 250, t: 291, r: 262, a: "A107", b: "B23" },
+      ],
+      "16-4": [
+        { l: 283, s: 95, t: 153, r: 100, a: "A23", b: "B23" },
+        { l: 383, s: 145, t: 203, r: 150, a: "A23", b: "B23" },
+        { l: 483, s: 195, t: 253, r: 200, a: "A23", b: "B23" },
+        { l: 586, s: 245, t: 294, r: 262, a: "A23", b: "B23" },
+        { l: 683, s: 295, t: 353, r: 300, a: "A23", b: "B23" },
+        { l: 783, s: 345, t: 403, r: 350, a: "A23", b: "B23" },
+        { l: 883, s: 395, t: 453, r: 400, a: "A23", b: "B23" },
+        { l: 983, s: 445, t: 503, r: 450, a: "A23", b: "B23" },
+        { l: 1083, s: 495, t: 553, r: 500, a: "A23", b: "B23" },
+      ],
+      "16-6": [],
+    },
+  };
+
+  var attachments = [
+    // РЕЗЬБА - РАЗДЕЛЬНАЯ для каждой стороны
+    // Для стороны B (шток) - левая колонка
+    { id: "thread-16-1-b", name: "Без наконечника", dist: 0, series: ["16-1"], img: "./img/tips/thread-16-1-b.png", detail: "./img/tips/thread-16-1-b.png" },
+    { id: "thread-16-2-b", name: "Без наконечника", dist: 0, series: ["16-2"], img: "./img/tips/thread-16-2-b.png", detail: "./img/tips/thread-16-2-b.png" },
+    { id: "thread-16-4-b", name: "Без наконечника", dist: 0, series: ["16-4"], img: "./img/tips/thread-16-4-b.png", detail: "./img/tips/thread-16-4-b.png" },
+    { id: "thread-16-6-b", name: "Без наконечника", dist: 0, series: ["16-6"], img: "./img/tips/thread-16-6-b.png", detail: "./img/tips/thread-16-6-b.png" },
+
+    // Для стороны A (трубка) - правая колонка
+    { id: "thread-16-1-a", name: "Без наконечника", dist: 0, series: ["16-1"], img: "./img/tips/thread-16-1-a.png", detail: "./img/tips/thread-16-1-a.png" },
+    { id: "thread-16-2-a", name: "Без наконечника", dist: 0, series: ["16-2"], img: "./img/tips/thread-16-2-a.png", detail: "./img/tips/thread-16-2-a.png" },
+    { id: "thread-16-4-a", name: "Без наконечника", dist: 0, series: ["16-4"], img: "./img/tips/thread-16-4-a.png", detail: "./img/tips/thread-16-4-a.png" },
+    { id: "thread-16-6-a", name: "Без наконечника", dist: 0, series: ["16-6"], img: "./img/tips/thread-16-6-a.png", detail: "./img/tips/thread-16-6-a.png" },
+
+    // ОБЩИЕ для обеих сторон (наконечники)
+    { id: "A246-B246", name: "Шарнир Пластик M8", dist: 19, series: ["16-1", "16-2"], img: "./img/tips/A246-B246.png", detail: "./img/details/A246-detail.png" },
+    { id: "A201-B201", name: "Шарнир Сталь M8", dist: 19, series: ["16-1", "16-2"], img: "./img/tips/A201-B201.png", detail: "./img/details/A201-detail.png" },
+    { id: "A207-B207", name: "Шарнир Сталь M8", dist: 19, series: ["16-4", "16-6"], img: "./img/tips/A201-B201.png", detail: "./img/details/A201-detail.png" },
+    { id: "A129-B129", name: "Шарнир Хром M8", dist: 30, series: ["16-4", "16-6"], img: "./img/tips/A129-B129.png", detail: "./img/details/A129-detail.png" },
+    { id: "A199-B199", name: "Шарнир Хром M10", dist: 30, series: ["16-4", "16-6"], img: "./img/tips/A199-B199.png", detail: "./img/details/A199-detail.png" },
+    { id: "A30-B30", name: "Проушина цинк Ø8.1", dist: 16, series: ["16-4", "16-6"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A31-B31", name: "Проушина цинк Ø10.1", dist: 16, series: ["16-4", "16-6"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A104-B104", name: "Проушина цинк Ø12", dist: 16, series: ["16-1", "16-2"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A220-B220", name: "Проушина цинк Ø6.1", dist: 16, series: ["16-1", "16-2"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A221-B221", name: "Проушина цинк Ø8.1", dist: 16, series: ["16-1", "16-2"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A222-B222", name: "Проушина цинк Ø10.1", dist: 16, series: ["16-1", "16-2"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A26-B26", name: "Проушина цинк Ø12", dist: 16, series: ["16-4", "16-6"], img: "./img/tips/A26-B26.png", detail: "./img/details/A26-detail.png" },
+    { id: "A1-B1", name: "Проушина цинк Ø6.1 (28)", dist: 28, series: ["16-1", "16-2"], img: "./img/tips/A1-B1.png", detail: "./img/details/A1-detail.png" },
+    { id: "A2-B2", name: "Проушина цинк Ø8.1 (28)", dist: 28, series: ["16-1", "16-2"], img: "./img/tips/A1-B1.png", detail: "./img/details/A1-detail.png" },
+    { id: "A13-B13", name: "Проушина цинк Ø8.1 (28)", dist: 28, series: ["16-4", "16-6"], img: "./img/tips/A1-B1.png", detail: "./img/details/A1-detail.png" },
+    { id: "A20-B20", name: "Проушина цинк Ø10.1 (22)", dist: 22, series: ["16-4", "16-6"], img: "./img/tips/A20-B20.png", detail: "./img/details/A20-detail.png" },
+    { id: "A10-B10", name: "Проушина цинк Ø8.1 (13)", dist: 13, series: ["16-1", "16-2"], img: "./img/tips/A10-B10.png", detail: "./img/details/A10-detail.png" },
+    { id: "A223-B223", name: "Проушина цинк Ø6.1 (13)", dist: 13, series: ["16-1", "16-2"], img: "./img/tips/A10-B10.png", detail: "./img/details/A10-detail.png" },
+    { id: "A111-B111", name: "Проушина цинк Ø8.1 (22)", dist: 22, series: ["16-4", "16-6"], img: "./img/tips/A20-B20.png", detail: "./img/details/A20-detail.png" },
+    { id: "A232-B232", name: "Вильчатая головка M6", dist: 24, series: ["16-1", "16-2"], img: "./img/tips/A232-B232.png", detail: "./img/details/A232-detail.png" },
+    { id: "A412-B412", name: "Проушина пластик", dist: 16, series: ["16-4", "16-6"], img: "./img/tips/A412-B412.png", detail: "./img/details/A412-detail.png" },
+    { id: "A21-B21", name: "Вильчатая головка M8", dist: 32, series: ["16-4", "16-6"], img: "./img/tips/A21-B21.png", detail: "./img/details/A21-detail.png" },
+  ];
+
+  var seriesLimits = {
+    "16-1": { min: 50, max: 400, rod: 6, tube: 15, thread: "M6" },
+    "16-2": { min: 80, max: 750, rod: 8, tube: 18.5, thread: "M6" },
+    "16-4": { min: 100, max: 1200, rod: 10, tube: 22, thread: "M8" },
+    "16-6": { min: 200, max: 2000, rod: 14, tube: 28, thread: "M8" },
+  };
+
+  /* ---------- УТИЛИТЫ ---------- */
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function toast(msg) {
+    var t = $("toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () {
+      t.classList.remove("show");
+    }, 2800);
+  }
+
+  function catalogUrl() {
+    return window.location.origin + window.location.pathname;
+  }
+
+  /* ---------- НАВИГАЦИЯ ПО СТРАНИЦАМ ---------- */
+  function showPage(id) {
+    if (!id) id = "home";
+    var page = $("page-" + id);
+    if (!page) id = "home";
+    currentPage = id;
+    document.querySelectorAll(".page").forEach(function (p) {
+      p.classList.toggle("active", p.id === "page-" + id);
+    });
+    document.querySelectorAll("[data-page]").forEach(function (btn) {
+      var on = btn.getAttribute("data-page") === id;
+      btn.classList.toggle("is-active", on);
+    });
+    if (location.hash !== "#" + id) {
+      history.replaceState(null, "", "#" + id);
+    }
+    window.scrollTo(0, 0);
+    if (id === "qr") renderQR();
+    if (id === "leads") renderLeads();
+    if (id === "config") {
+      updateUI();
+    }
+  }
+
+  function showPageFromHash() {
+    var id = (location.hash || "#home").replace("#", "");
+    showPage(id);
+  }
+
+  /* ---------- КОНФИГУРАТОР: логика выбора и визуализации ---------- */
+  function updateUI() {
+    if (!$("series")) return;
+    var series = $("series").value;
+    var weldedOpt = $("welded-opt");
+    var conn = $("connection").value;
+
+    if (series === "16-6") {
+      weldedOpt.disabled = true;
+      if (conn === "welded") {
+        $("connection").value = "threaded";
+        conn = "threaded";
+      }
+    } else {
+      weldedOpt.disabled = false;
+    }
+
+    var dimSel = $("dimensions-select");
+    dimSel.innerHTML = "";
+    var data = springCatalog[conn][series];
+    if (data && data.length > 0) {
+      data.forEach(function (p, idx) {
+        dimSel.add(new Option("L: " + p.l + " мм (±2мм) / Ход: " + p.s + " мм", idx));
+      });
+    } else {
+      dimSel.add(new Option("Нет доступных размеров", "0"));
+    }
+
+    var boxA = $("box-a");
+    var boxB = $("box-b");
+    var selA = $("attach-a");
+    var selB = $("attach-b");
+
+    if (conn === "welded") {
+      boxA.classList.add("disabled");
+      boxB.classList.add("disabled");
+      selA.disabled = true;
+      selB.disabled = true;
+    } else {
+      boxA.classList.remove("disabled");
+      boxB.classList.remove("disabled");
+      selA.disabled = false;
+      selB.disabled = false;
+      fillAttach("attach-a", series);
+      fillAttach("attach-b", series);
+    }
+
+    var lim = seriesLimits[series];
+    var forceInp = $("force");
+    forceInp.min = lim.min;
+    forceInp.max = lim.max;
+    forceInp.placeholder = lim.min + " - " + lim.max;
+    $("force-limits").innerText = "min " + lim.min + "H — max " + lim.max + "H";
+
+    updateTipImages();
+    validateForce();
+    calculateTotal();
+  }
+
+  function fillAttach(id, series) {
+    var sel = $(id);
+    sel.innerHTML = "";
+
+    var headerOption = document.createElement("option");
+    headerOption.value = "";
+    headerOption.text = "ПОДСОЕДИНЕНИЯ";
+    headerOption.selected = true;
+    sel.appendChild(headerOption);
+
+    var separatorOption = document.createElement("option");
+    separatorOption.value = "";
+    separatorOption.text = "——————";
+    separatorOption.disabled = true;
+    sel.appendChild(separatorOption);
+
+    var isLeftSide = id === "attach-a";
+
+    attachments
+      .filter(function (a) {
+        if (a.series.indexOf(series) === -1) return false;
+        if (a.id.indexOf("thread-") === 0) {
+          return isLeftSide ? a.id.slice(-2) === "-b" : a.id.slice(-2) === "-a";
+        }
+        return true;
+      })
+      .forEach(function (a) {
+        sel.add(new Option(a.name + " (+" + a.dist + "мм)", a.id + "|" + a.dist));
+      });
+
+    if (sel.options.length <= 2) {
+      sel.add(new Option("Нет доступных наконечников", "none|0"));
+    }
+  }
+
+  function isTipSelected(side) {
+    var selectId = side === "a" ? "attach-a" : "attach-b";
+    var el = $(selectId);
+    if (!el || !el.value) return false;
+    var val = el.value.split("|")[0];
+    return val && val !== "" && val.indexOf("thread-") !== 0 && val !== "none";
+  }
+
+  function updateTipImages() {
+    var series = $("series").value;
+    var conn = $("connection").value;
+
+    var springImg = $("img-spring");
+    if (springImg) {
+      springImg.src = "./img/springs/" + series + "-" + conn + ".png";
+    }
+
+    var imgA = $("img-a");
+    var imgB = $("img-b");
+    var zoomHintA = document.querySelector("#box-a .zoom-hint");
+    var zoomHintB = document.querySelector("#box-b .zoom-hint");
+
+    if (conn === "threaded") {
+      var valAraw = $("attach-a") ? $("attach-a").value : "";
+      var valBraw = $("attach-b") ? $("attach-b").value : "";
+
+      var valA = valAraw ? valAraw.split("|")[0] : "";
+      var valB = valBraw ? valBraw.split("|")[0] : "";
+
+      var tipA = attachments.find(function (a) { return a.id === valA; });
+      var tipB = attachments.find(function (a) { return a.id === valB; });
+
+      if (imgA) imgA.src = valA && tipA ? tipA.img : "./img/tips/none.png";
+      if (imgB) imgB.src = valB && tipB ? tipB.img : "./img/tips/none.png";
+
+      if (zoomHintA) zoomHintA.style.display = isTipSelected("a") ? "block" : "none";
+      if (zoomHintB) zoomHintB.style.display = isTipSelected("b") ? "block" : "none";
+    } else {
+      if (imgA) imgA.src = "./img/tips/welded-eye.png";
+      if (imgB) imgB.src = "./img/tips/welded-eye.png";
+      if (zoomHintA) zoomHintA.style.display = "none";
+      if (zoomHintB) zoomHintB.style.display = "none";
+    }
+  }
+
+  function openDetail(side) {
+    var conn = $("connection").value;
+    if (conn === "welded") {
+      toast("Для сварного соединения нет детальных чертежей наконечников");
+      return;
+    }
+    var selectId = side === "a" ? "attach-a" : "attach-b";
+    var el = $(selectId);
+    if (!el || !el.value) {
+      toast("Сначала выберите наконечник");
+      return;
+    }
+    var val = el.value.split("|")[0];
+    var tip = attachments.find(function (a) { return a.id === val; });
+    if (tip && tip.id !== "none" && tip.detail) {
+      $("modal-title").innerText = "Чертёж наконечника: " + tip.name;
+      var mImg = $("modal-img");
+      mImg.src = tip.detail;
+      mImg.style.display = "block";
+      var slot = $("modal-img-slot");
+      if (slot) slot.style.display = "none";
+      $("detailModal").classList.add("open");
+      $("detailModal").style.display = "flex";
+    } else {
+      toast("Для этого наконечника нет детального чертежа");
+    }
+  }
+
+  function openMainDrawing() {
+    var springImg = $("img-spring");
+    var currentSrc = springImg ? springImg.src : "";
+    $("modal-title").innerText = "Схема пружины";
+    var mImg = $("modal-img");
+    mImg.src = currentSrc;
+    mImg.style.display = "block";
+    var slot = $("modal-img-slot");
+    if (slot) slot.style.display = "none";
+    $("detailModal").classList.add("open");
+    $("detailModal").style.display = "flex";
+  }
+
+  function openImage(src, title) {
+    $("modal-title").innerText = title || "Каталог";
+    $("modal-img").src = src;
+    $("modal-img").style.display = "block";
+    var slot = $("modal-img-slot");
+    if (slot) slot.style.display = "none";
+    $("detailModal").classList.add("open");
+    $("detailModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    $("detailModal").classList.remove("open");
+    $("detailModal").style.display = "none";
+  }
+
+  function validateForce() {
+    var series = $("series").value;
+    var lim = seriesLimits[series];
+    var forceInp = $("force");
+    var saveBtn = $("save-btn");
+    var val = parseInt((forceInp.value || "").trim(), 10);
+    var valid = true;
+
+    if (isNaN(val) || val % 10 !== 0) {
+      valid = false;
+      forceInp.classList.add("error");
+      saveBtn.disabled = true;
+      $("force-limits").innerText = "Значение должно быть кратно 10";
+    } else if (val < lim.min || val > lim.max) {
+      valid = false;
+      forceInp.classList.add("error");
+      saveBtn.disabled = true;
+      $("force-limits").innerText = "min " + lim.min + "H — max " + lim.max + "H";
+    } else {
+      forceInp.classList.remove("error");
+      saveBtn.disabled = false;
+      $("force-limits").innerText = "min " + lim.min + "H — max " + lim.max + "H";
+    }
+    calculateTotal();
+    return valid;
+  }
+
+  function calculateTotal() {
+    var series = $("series").value;
+    var conn = $("connection").value;
+    var dimIdx = $("dimensions-select").value;
+
+    if (!springCatalog[conn] || !springCatalog[conn][series] || !springCatalog[conn][series][dimIdx]) {
+      $("order-code").innerText = "---";
+      $("calc-result").innerText = "L1: -- мм";
+      return;
+    }
+
+    var p = springCatalog[conn][series][dimIdx];
+    var force = $("force").value || "???";
+
+    if (conn === "threaded") {
+      var sideAraw = $("attach-b").value;
+      var sideBraw = $("attach-a").value;
+      if (!sideAraw || !sideBraw) {
+        $("order-code").innerText = "---";
+        $("calc-result").innerText = "Выберите наконечники";
+        return;
+      }
+      var sideA = sideAraw.split("|");
+      var sideB = sideBraw.split("|");
+      var codeA =
+        sideA[0] === "none" || sideA[0].indexOf("thread-") === 0
+          ? "AM" + seriesLimits[series].thread.replace("M", "")
+          : sideA[0].split("-")[0];
+      var codeB =
+        sideB[0] === "none" || sideB[0].indexOf("thread-") === 0
+          ? "BM" + seriesLimits[series].thread.replace("M", "")
+          : sideB[0].split("-")[1] || sideB[0].replace("A", "B");
+      var l1 = p.l + (parseFloat(sideA[1]) || 0) + (parseFloat(sideB[1]) || 0);
+      $("order-code").innerText = series + "-" + p.t + "-" + p.r + "-" + codeA + "-" + codeB + "-" + force + "N";
+      var isBothPlain = sideA[0].indexOf("thread-") === 0 && sideB[0].indexOf("thread-") === 0;
+      if (isBothPlain) {
+        $("calc-result").innerText = "L (длина без учёта резьбы): " + p.l.toFixed(1) + " мм";
+      } else {
+        $("calc-result").innerText = "L1 (между осями): " + l1.toFixed(1) + " мм";
+      }
+    } else {
+      $("order-code").innerText = series + "-" + p.t + "-" + p.r + "-" + p.a + "-" + p.b + "-" + force + "N";
+      $("calc-result").innerText = "L1 (между осями): " + p.l.toFixed(1) + " мм";
+    }
+    $("spec-info").innerHTML =
+      "Параметры: Шток Ø" + seriesLimits[series].rod + "мм / Трубка Ø" + seriesLimits[series].tube + "мм.";
+  }
+
+  function addToRequest() {
+    if (!validateForce()) {
+      toast("Введите корректное значение усилия");
+      return;
+    }
+    calculateTotal();
+    var code = $("order-code").innerText;
+    if (!code || code === "---") {
+      toast("Сначала выберите наконечники и усилие");
+      return;
+    }
+    $("lead-product").value = "config";
+    $("lead-message").value = "Артикул: " + code;
+    showPage("lead");
+    toast("Артикул перенесён в заявку");
+  }
+
+  function copyArticle() {
+    var code = $("order-code").innerText;
+    if (!code || code === "---") {
+      toast("Нечего копировать — соберите артикул");
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(function () {
+        toast("Артикул скопирован: " + code);
+      });
+    } else {
+      toast(code);
+    }
+  }
+
+  async function downloadPDF() {
+    if (!validateForce()) {
+      toast("Введите корректное усилие перед скачиванием PDF");
+      return;
+    }
+    var article = $("order-code").innerText;
+    var series = $("series").value;
+    var dimsSelect = $("dimensions-select");
+    var dimsText = dimsSelect.options[dimsSelect.selectedIndex].text;
+    var force = $("force").value + " N";
+    var l1 = $("calc-result").innerText;
+    var sideAval = ($("attach-b").value || "").split("|")[0];
+    var sideBval = ($("attach-a").value || "").split("|")[0];
+    var isBothSidesPlain =
+      (sideAval.indexOf("thread-") === 0 || sideAval === "none" || sideAval === "") &&
+      (sideBval.indexOf("thread-") === 0 || sideBval === "none" || sideBval === "");
+    if (isBothSidesPlain) l1 = "— (без наконечников)";
+    var connType = $("connection").value === "threaded" ? "Резьбовое" : "Сварное";
+    var nameRod = "Сварная проушина";
+    var nameTube = "Сварная проушина";
+    if ($("connection").value === "threaded") {
+      var selRod = $("attach-a");
+      var selTube = $("attach-b");
+      nameRod = selRod.options[selRod.selectedIndex].text;
+      nameTube = selTube.options[selTube.selectedIndex].text;
+    }
+    $("pdf-date").innerText = new Date().toLocaleDateString("ru-RU");
+    $("pdf-article").innerText = article;
+    $("pdf-series").innerText = series;
+    $("pdf-dims").innerText = dimsText;
+    $("pdf-force").innerText = force;
+    $("pdf-l1").innerText = l1;
+    $("pdf-conn").innerText = connType;
+    $("pdf-name-rod").innerText = nameRod;
+    $("pdf-name-tube").innerText = nameTube;
+    var imgA = $("img-a");
+    var imgB = $("img-b");
+    var imgSpring = $("img-spring");
+    if ($("pdf-img-rod")) $("pdf-img-rod").src = imgA ? imgA.src : "";
+    if ($("pdf-img-tube")) $("pdf-img-tube").src = imgB ? imgB.src : "";
+    if ($("pdf-main-img")) $("pdf-main-img").src = imgSpring ? imgSpring.src : "";
+
+    if (!window.html2canvas) {
+      try { await loadScript("/vendor/html2canvas.min.js"); } catch (e) {}
+    }
+    if (!window.jspdf) {
+      try { await loadScript("/vendor/jspdf.umd.min.js"); } catch (e) {}
+    }
+
+    if (!window.html2canvas || !window.jspdf) {
+      toast("Библиотека PDF ещё загружается, подождите секунду");
+      return;
+    }
+    var btn = $("pdf-btn");
+    var oldText = btn.innerText;
+    btn.innerText = "ГЕНЕРАЦИЯ...";
+    btn.disabled = true;
+    try {
+      var canvas = await window.html2canvas($("pdf-template"), {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        allowTaint: false,
+      });
+      var imgData = canvas.toDataURL("image/jpeg", 1.0);
+      var pdf = new window.jspdf.jsPDF("p", "mm", "a4");
+      var pdfWidth = pdf.internal.pageSize.getWidth();
+      var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("Dikon_GasSpring_" + article.replace(/\//g, "-") + ".pdf");
+    } catch (err) {
+      console.error(err);
+      toast("Не удалось создать PDF. Попробуйте ещё раз.");
+    } finally {
+      btn.innerText = oldText;
+      btn.disabled = false;
+    }
+  }
+
+  /* ---------- ЗАЯВКИ (localStorage, для стенда) ---------- */
+  function loadLeads() {
+    try {
+      return JSON.parse(localStorage.getItem(LEADS_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveLeadFromForm(ev) {
+    if (ev) ev.preventDefault();
+    var name = ($("lead-name").value || "").trim();
+    var phone = ($("lead-phone").value || "").trim();
+    var company = ($("lead-company").value || "").trim();
+    var product = $("lead-product").value;
+    var message = ($("lead-message").value || "").trim();
+    if (!name || !phone) {
+      toast("Укажите имя и телефон");
+      return false;
+    }
+    var all = loadLeads();
+    all.unshift({
+      name: name,
+      phone: phone,
+      company: company,
+      product: product,
+      message: message,
+      ts: Date.now(),
+    });
+    localStorage.setItem(LEADS_KEY, JSON.stringify(all));
+    $("lead-form").reset();
+    toast("Заявка сохранена. Менеджер свяжется с вами.");
+    renderLeads();
+    return false;
+  }
+
+  function productLabel(id) {
+    var map = {
+      springs: "Газовые пружины",
+      lockable: "Блокируемые пружины",
+      movotec: "Movotec",
+      varistand: "Varistand / Varibase",
+      medical: "Гидроприводы",
+      wheels: "Колёса",
+      config: "Конфигуратор",
+    };
+    return map[id] || id || "—";
+  }
+
+  function renderLeads() {
+    var box = $("leads-list");
+    if (!box) return;
+    var all = loadLeads();
+    $("leads-count").textContent = String(all.length);
+    if (!all.length) {
+      box.innerHTML = '<div class="empty">Заявок пока нет — посетители оставляют их с телефона.</div>';
+      return;
+    }
+    box.innerHTML = all
+      .map(function (l) {
+        var when = new Date(l.ts).toLocaleString("ru-RU");
+        return (
+          '<div class="lead-item"><strong>' +
+          escapeHtml(l.name) +
+          "</strong> · " +
+          escapeHtml(l.phone) +
+          '<div class="meta">' +
+          escapeHtml(l.company || "") +
+          " · " +
+          escapeHtml(productLabel(l.product)) +
+          " · " +
+          when +
+          "</div>" +
+          (l.message ? "<p>" + escapeHtml(l.message) + "</p>" : "") +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">");
+  }
+
+  function exportLeads() {
+    var all = loadLeads();
+    if (!all.length) {
+      toast("Нечего выгружать");
+      return;
+    }
+    var rows = [["Дата", "Имя", "Телефон", "Компания", "Интерес", "Комментарий"]]
+      .concat(
+        all.map(function (l) {
+          return [
+            new Date(l.ts).toLocaleString("ru-RU"),
+            l.name,
+            l.phone,
+            l.company,
+            productLabel(l.product),
+            (l.message || "").replace(/\n/g, " "),
+          ];
+        })
+      )
+      .map(function (r) {
+        return r
+          .map(function (c) {
+            return '"' + String(c).replace(/"/g, '""') + '"';
+          })
+          .join(";");
+      })
+      .join("\n");
+    var blob = new Blob(["\ufeff" + rows], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "dikon-leads.csv";
+    a.click();
+  }
+
+  function clearLeads() {
+    if (!confirm("Удалить все заявки с этого устройства?")) return;
+    localStorage.removeItem(LEADS_KEY);
+    renderLeads();
+    toast("Список очищен");
+  }
+
+  /* ---------- QR ---------- */
+  function renderQR() {
+    var box = $("qr-box");
+    if (!box) return;
+    box.innerHTML = "";
+    var url = catalogUrl();
+    $("qr-url").textContent = url;
+    if (window.QRCode) {
+      new window.QRCode(box, {
+        text: url,
+        width: 220,
+        height: 220,
+        colorDark: "#1b2a3a",
+        colorLight: "#ffffff",
+        correctLevel: window.QRCode.CorrectLevel.M,
+      });
+    } else {
+      var img = document.createElement("img");
+      img.alt = "QR-код каталога Dikon";
+      img.width = 220;
+      img.height = 220;
+      img.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+        encodeURIComponent(url);
+      box.appendChild(img);
+    }
+  }
+
+  function downloadQR() {
+    var canvas = $("qr-box").querySelector("canvas");
+    var img = $("qr-box").querySelector("img");
+    var a = document.createElement("a");
+    a.download = "dikon-catalog-qr.png";
+    if (canvas) a.href = canvas.toDataURL("image/png");
+    else if (img) a.href = img.src;
+    else return;
+    a.click();
+  }
+
+  /* ---------- INIT ---------- */
+  var abort;
+
+  function initDikonCatalog() {
+    if (abort) abort.abort();
+    abort = new AbortController();
+    var sig = abort.signal;
+
+    document.querySelectorAll("[data-page]").forEach(function (btn) {
+      btn.addEventListener(
+        "click",
+        function () {
+          var product = btn.getAttribute("data-product");
+          if (product && $("lead-product")) $("lead-product").value = product;
+          showPage(btn.getAttribute("data-page"));
+        },
+        { signal: sig }
+      );
+    });
+
+    window.addEventListener("hashchange", showPageFromHash, { signal: sig });
+
+    var series = $("series");
+    if (series) {
+      series.addEventListener("change", updateUI, { signal: sig });
+      $("connection").addEventListener("change", updateUI, { signal: sig });
+      $("dimensions-select").addEventListener("change", calculateTotal, { signal: sig });
+      $("force").addEventListener("input", validateForce, { signal: sig });
+      $("attach-a").addEventListener(
+        "change",
+        function () {
+          updateTipImages();
+          calculateTotal();
+        },
+        { signal: sig }
+      );
+      $("attach-b").addEventListener(
+        "change",
+        function () {
+          updateTipImages();
+          calculateTotal();
+        },
+        { signal: sig }
+      );
+    }
+
+    document.querySelectorAll("[data-open-img]").forEach(function (el) {
+      el.addEventListener(
+        "click",
+        function () {
+          openImage(el.getAttribute("data-open-img"), el.getAttribute("data-open-title") || "");
+        },
+        { signal: sig }
+      );
+    });
+
+    $("detailModal").addEventListener(
+      "click",
+      function (e) {
+        if (e.target === this) closeModal();
+      },
+      { signal: sig }
+    );
+
+    showPageFromHash();
+    if ($("series")) updateUI();
+    renderLeads();
+
+    return function () {
+      abort.abort();
+    };
+  }
+
+  window.initDikonCatalog = initDikonCatalog;
+  window.showPage = showPage;
+  window.updateUI = updateUI;
+  window.validateForce = validateForce;
+  window.calculateTotal = calculateTotal;
+  window.openDetail = openDetail;
+  window.openMainDrawing = openMainDrawing;
+  window.closeModal = closeModal;
+  window.downloadPDF = downloadPDF;
+  window.addToRequest = addToRequest;
+  window.copyArticle = copyArticle;
+  window.saveLeadFromForm = saveLeadFromForm;
+  window.exportLeads = exportLeads;
+  window.clearLeads = clearLeads;
+  window.downloadQR = downloadQR;
+  window.openImage = openImage;
+})();
+
+
+// Auto-initialize on load
+if (document.readyState !== "loading") {
+  if (typeof window.initDikonCatalog === "function") {
+    window.initDikonCatalog();
+  }
+} else {
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof window.initDikonCatalog === "function") {
+      window.initDikonCatalog();
+    }
+  });
+}
+
+</script>
+</body>
+</html>

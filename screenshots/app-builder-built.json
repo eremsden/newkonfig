@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Dikon — цифровой каталог",
+      "hasCanvas": false,
+      "bodyTextLen": 1083,
+      "bodyTextHash": "fb3fde0e50c68d627c8e6fdf0f06b536de0ee2bca0baa57aa0f02d0ebbca1a49",
+      "bodyTextPrefix": "ДиконЦИФРОВОЙ КАТАЛОГ КАТАЛОГ КОНФИГУРАТОР ЗАЯВКА QR КОНТАКТЫ ЗА",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Dikon — цифровой каталог",
+      "hasCanvas": false,
+      "bodyTextLen": 1070,
+      "bodyTextHash": "33be5c40b01626f35ec74b6c37c82f8bcc1d87208277de8a8283ad65387097ad",
+      "bodyTextPrefix": "ДиконЦИФРОВОЙ КАТАЛОГ Каталог Dikon на телефоне Газовые пружины ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

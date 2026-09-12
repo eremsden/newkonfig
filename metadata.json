@@ -1,0 +1,6 @@
+{
+  "name": "Дикон — цифровой каталог",
+  "description": "Цифровой каталог Dikon систем регулировки высоты стола, конфигуратор и подбор комплектующих.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
